@@ -1,0 +1,16 @@
+{
+  "name": "Le dernier calcul d’Antoine d’Abbadie",
+  "short_name": "Calcul d’Abbadie",
+  "description": "Mini escape game pédagogique hybride sur l’informatique.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#071426",
+  "theme_color": "#071426",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
