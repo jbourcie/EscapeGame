@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type Dispatch, type SetStateAction } from 'react';
 import { ambiguousObservation, balancedTraining, biasedTraining, classify, clearObservation } from './game/classifier';
 import { clearProgress, initialProgress, isFinaleUnlocked, loadProgress, saveProgress, startMission, validateFragment, type Progress } from './game/progress';
 import { finalCode, getMission, levels, missions, type Level, type Mission } from './data/missions';
+import { ComponentMission } from './missions/components/ComponentMission';
 
 type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale' | 'victory';
 
@@ -93,7 +94,7 @@ function MissionMap({ progress, onOpen, onFinale, onLevel }: { progress: Progres
         <div><p className="eyebrow">Carte de la machine</p><h1>Quel module allez-vous réparer ?</h1></div>
         <button className="level-pill" onClick={onLevel} aria-label="Changer de niveau">{level?.symbol} {level?.name} · changer</button>
       </div>
-      <p className="lead lead--small">Choisissez librement. Chaque manipulation physique fera apparaître un fragment à tester ici.</p>
+      <p className="lead lead--small">Choisissez librement. Les modules numériques se jouent à l’écran ; les autres utilisent encore le matériel physique.</p>
       <div className="mission-grid">
         {missions.map((mission) => {
           const completed = progress.completed.includes(mission.id);
@@ -152,7 +153,7 @@ function AISimulator({ done, onDone }: { done: boolean; onDone: () => void }) {
   );
 }
 
-function MissionScreen({ mission, progress, onProgress, onBack }: { mission: Mission; progress: Progress; onProgress: (progress: Progress) => void; onBack: () => void }) {
+function MissionScreen({ mission, progress, onProgress, onBack }: { mission: Mission; progress: Progress; onProgress: Dispatch<SetStateAction<Progress>>; onBack: () => void }) {
   const level = progress.level ?? 'scientist';
   const completed = progress.completed.includes(mission.id);
   const [answer, setAnswer] = useState('');
@@ -275,6 +276,7 @@ export default function App() {
   if (screen === 'welcome') content = <Welcome hasProgress={progress.started.length > 0 || progress.completed.length > 0} onStart={() => setScreen('level')} onResume={() => setScreen(progress.level ? 'map' : 'level')} />;
   else if (screen === 'level') content = <LevelChoice onChoose={chooseLevel} onBack={() => setScreen('welcome')} />;
   else if (screen === 'map') content = <MissionMap progress={progress} onOpen={openMission} onFinale={() => setScreen('finale')} onLevel={() => setScreen('level')} />;
+  else if (screen === 'mission' && activeMission?.id === 'components') content = <ComponentMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission) content = <MissionScreen key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} />;
   else content = <Victory onNewTeam={newTeam} />;

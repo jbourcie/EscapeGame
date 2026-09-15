@@ -85,3 +85,53 @@
 - Le build est sans erreur et le parcours reste jouable depuis le cache après un premier chargement.
 - Tous les contrôles sont tactiles (48 px minimum), accessibles au clavier, lisibles et sans information portée uniquement par la couleur.
 - Aucun défilement horizontal à 768×1024 et 1024×768 ; `prefers-reduced-motion` neutralise les animations.
+
+## Évolution vers une version 100 % numérique
+
+### Boucle d’interaction commune
+
+Chaque futur mini-jeu suit la même boucle : découvrir une consigne courte, sélectionner ou déplacer un objet, tenter un dépôt dans une zone, recevoir un retour pédagogique, verrouiller les placements corrects, suivre une progression visible, puis déclencher automatiquement le fragment et l’animation de réussite. Un bouton remet le mini-jeu en cours à zéro tant qu’il n’est pas validé ; la remise à zéro complète de l’équipe reste l’unique moyen d’effacer un fragment acquis.
+
+Le socle partagé sépare :
+
+- les données du puzzle (objets, cibles, correspondances et textes par niveau) ;
+- la logique pure de placement et de réussite ;
+- le hook React qui gère sélection, déplacement, erreur, verrouillage et retour ;
+- les composants accessibles d’objet manipulable et de zone de destination ;
+- le décor propre à chaque mission.
+
+### Comportement tactile et accessible
+
+- Les interactions utilisent les Pointer Events pour unifier souris, stylet et doigt, sans bibliothèque supplémentaire.
+- Un déplacement capture le pointeur, applique `touch-action: none` et empêche le défilement pendant le geste.
+- Le dépôt peut toujours se faire sans glisser : toucher ou cliquer l’objet, puis toucher ou cliquer la cible.
+- Un second toucher sur l’objet annule la sélection.
+- Les cibles sont de vrais boutons HTML, disposent d’un état de focus visible, d’un libellé accessible et mesurent au moins 48 × 48 px.
+- Les états sélectionné, déplacé, refusé et installé sont indiqués par du texte ou un symbole en plus de la couleur.
+- Les animations sont courtes et neutralisées par `prefers-reduced-motion`.
+
+### Migration progressive des six missions
+
+1. **Composants — cette itération** : placement numérique complet des quatre pièces, apparition automatique du fragment 4 et persistance des placements.
+2. **Programme** : grille tactile et séquence d’instructions réutilisant sélection, dépôt, verrouillage et progression.
+3. **Mémoire** : tri de cartes dans deux familles avec le même socle de placement.
+4. **Données** : interrupteurs-étoiles et décodage binaire local.
+5. **Informatique partout** : sélection d’objets puis construction ordonnée de la chaîne capteur-programme-action.
+6. **Intelligence artificielle** : classement tactile des observations, relié à la simulation locale existante.
+
+Une seule mission est migrée à la fois. Tant qu’une mission n’est pas migrée, son parcours hybride et sa validation manuelle restent intacts.
+
+### Architecture des assets
+
+- `src/assets/game/components/` : objets interactifs temporaires puis SVG définitifs.
+- `src/assets/game/backgrounds/` : décors narratifs WebP ou PNG.
+- `src/assets/game/ui/` : éléments d’interface locaux et états de jeu.
+- `src/assets/placeholders/` : éléments provisoires historiques.
+- `.prompts/` : briefs et prompts de production graphique, jamais des dépendances d’exécution.
+- `docs/assets-inventory.md` : inventaire, proportions, rôle et remplacement prévu.
+
+Les visuels interactifs restent séparés des libellés HTML afin de préserver lisibilité, traduction et accessibilité. Aucun asset n’est chargé depuis un CDN.
+
+### Entrées IoT futures
+
+La logique de jeu est pensée autour d’événements `select`, `place` et `reset`. L’écran est le seul adaptateur de cette version. Une interface `MissionInputAdapter` pourra plus tard convertir une entrée matérielle en ces mêmes événements sans changer les règles du puzzle. Aucun Web Bluetooth, Web Serial, MQTT, réseau local ou code microcontrôleur n’est introduit avant validation du jeu entièrement tactile.

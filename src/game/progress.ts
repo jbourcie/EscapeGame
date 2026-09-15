@@ -10,6 +10,7 @@ export type Progress = {
   fragments: Record<string, string>;
   attempts: Record<string, number>;
   hints: Record<string, number>;
+  digitalPlacements: Record<string, Record<string, string>>;
   aiSimulationDone: boolean;
 };
 
@@ -20,6 +21,7 @@ export const initialProgress = (): Progress => ({
   fragments: {},
   attempts: {},
   hints: {},
+  digitalPlacements: {},
   aiSimulationDone: false,
 });
 
@@ -39,6 +41,14 @@ export function sanitizeProgress(value: unknown): Progress {
     Object.entries(raw.fragments && typeof raw.fragments === 'object' ? raw.fragments : {})
       .filter(([id, fragment]) => knownIds.has(id) && typeof fragment === 'string'),
   );
+  const digitalPlacements = Object.fromEntries(
+    Object.entries(raw.digitalPlacements && typeof raw.digitalPlacements === 'object' ? raw.digitalPlacements : {})
+      .filter(([id, placements]) => knownIds.has(id) && placements && typeof placements === 'object')
+      .map(([id, placements]) => [id, Object.fromEntries(
+        Object.entries(placements as Record<string, unknown>)
+          .filter(([itemId, targetId]) => Boolean(itemId) && typeof targetId === 'string'),
+      ) as Record<string, string>]),
+  ) as Record<string, Record<string, string>>;
   return {
     level,
     started: [...new Set(stringList(raw.started))],
@@ -46,6 +56,7 @@ export function sanitizeProgress(value: unknown): Progress {
     fragments,
     attempts: numberRecord(raw.attempts),
     hints: numberRecord(raw.hints),
+    digitalPlacements,
     aiSimulationDone: raw.aiSimulationDone === true,
   };
 }

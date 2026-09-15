@@ -5,6 +5,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { finalCode, missions } from './data/missions';
 
+async function placeComponent(user: ReturnType<typeof userEvent.setup>, item: RegExp, target: RegExp) {
+  await user.click(screen.getByRole('button', { name: item }));
+  await user.click(screen.getByRole('button', { name: target }));
+}
+
+async function solveComponents(user: ReturnType<typeof userEvent.setup>) {
+  await placeComponent(user, /Processeur/i, /Calculer et exécuter/i);
+  await placeComponent(user, /Mémoire vive/i, /Conserver temporairement/i);
+  await placeComponent(user, /Stockage/i, /Conserver les fichiers après/i);
+  await placeComponent(user, /Alimentation/i, /Fournir et distribuer/i);
+}
+
 beforeEach(() => {
   localStorage.clear();
   window.scrollTo = vi.fn();
@@ -23,17 +35,17 @@ describe('parcours d’équipe', () => {
 
     for (const [index, mission] of missions.entries()) {
       await user.click(screen.getByRole('button', { name: new RegExp(mission.shortTitle, 'i') }));
-      const input = screen.getByLabelText(/Quel chiffre apparaît/i);
-
       if (index === 0) {
-        await user.type(input, '0');
+        expect(screen.queryByLabelText(/Quel chiffre apparaît/i)).toBeNull();
+        await placeComponent(user, /Processeur/i, /Conserver les fichiers après/i);
+        expect(screen.getByText(/Cette zone doit plutôt conserver les fichiers/i)).toBeTruthy();
+        await solveComponents(user);
+      } else {
+        const input = screen.getByLabelText(/Quel chiffre apparaît/i);
+        await user.type(input, mission.answer);
         await user.click(screen.getByRole('button', { name: /Tester le fragment/i }));
-        expect(screen.getByText(/Ce fragment ne réagit pas/i)).toBeTruthy();
       }
-
-      await user.type(input, mission.answer);
-      await user.click(screen.getByRole('button', { name: /Tester le fragment/i }));
-      expect(screen.getByRole('heading', { name: /Module réparé/i })).toBeTruthy();
+      expect(screen.getByRole('heading', { name: index === 0 ? /Le cœur de la machine bat/i : /Module réparé/i })).toBeTruthy();
       await user.click(screen.getByRole('button', { name: /Retourner à la carte/i }));
     }
 
@@ -49,12 +61,13 @@ describe('parcours d’équipe', () => {
     await user.click(screen.getByRole('button', { name: /Commencer la mission/i }));
     await user.click(screen.getByRole('button', { name: /Explorateur/i }));
     await user.click(screen.getByRole('button', { name: /Composants/i }));
-    await user.type(screen.getByLabelText(/Quel chiffre apparaît/i), '4');
-    await user.click(screen.getByRole('button', { name: /Tester le fragment/i }));
+    await placeComponent(user, /Processeur/i, /Faire les calculs/i);
     first.unmount();
 
     render(<App />);
     await user.click(screen.getByRole('button', { name: /Reprendre la partie/i }));
-    expect(screen.getByRole('button', { name: /Composants.*Validée/i })).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Composants.*En cours/i }));
+    expect(screen.getByLabelText(/1 composant installé sur 4/i)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /Processeur.*Il fait les calculs/i })).toBeNull();
   });
 });

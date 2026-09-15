@@ -1,4 +1,4 @@
-const CACHE = 'abbadie-v1';
+const CACHE = 'abbadie-v2';
 const CORE = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
@@ -17,8 +17,8 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      if (response.ok) caches.open(CACHE).then((cache) => cache.put(event.request, response.clone()));
-      return response;
+      if (!response.ok) return response;
+      return caches.open(CACHE).then((cache) => cache.put(event.request, response.clone())).then(() => response);
     }).catch(() => event.request.mode === 'navigate' ? caches.match('/index.html') : undefined)),
   );
 });

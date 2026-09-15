@@ -1,6 +1,6 @@
 # Le dernier calcul d’Antoine d’Abbadie
 
-Prototype fonctionnel d’un mini escape game pédagogique hybride pour tablette. L’application raconte l’aventure, guide les six missions et vérifie les fragments découverts avec le matériel physique. Elle n’utilise ni compte, ni backend, ni API distante.
+Prototype fonctionnel d’un mini escape game pédagogique pour tablette. La mission « Composants » est désormais entièrement numérique et tactile ; les cinq autres missions conservent provisoirement leur fonctionnement hybride avec matériel physique. L’application n’utilise ni compte, ni backend, ni API distante.
 
 ## Prérequis et lancement
 
@@ -52,6 +52,9 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 - `PLAN.md` : parcours, règles et stratégie de vérification.
 - `src/data/missions.ts` : contenu éditorial, fragments et indices.
 - `src/game/` : progression persistante et classifieur IA déterministe.
+- `src/game/interactions/` : moteur, hook et composants tactiles réutilisables.
+- `src/missions/components/` : mini-jeu numérique de la mission Composants.
+- `src/assets/game/` : structure des futurs objets, décors et éléments d’interface locaux.
 - `docs/physical-kit.md` : matériel physique des six missions.
 - `docs/future-assets.md` : courte liste des visuels à produire ensuite.
 - `src/assets/placeholders/` : emplacement des futures illustrations.
@@ -59,4 +62,4 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 
 ## Limites volontaires de cette itération
 
-Les illustrations sont des formes CSS temporaires. Les cartes et plateaux imprimables finaux ne sont pas encore produits. La simulation IA est un classifieur pédagogique local par proximité numérique, pas une IA distante.
+Les illustrations de la première mission sont des formes CSS temporaires. Les cinq autres missions attendent encore leur migration numérique et les assets définitifs ne sont pas produits. La simulation IA est un classifieur pédagogique local par proximité numérique, pas une IA distante.
