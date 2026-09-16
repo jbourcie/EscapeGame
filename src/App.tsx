@@ -27,10 +27,10 @@ function Machine({ running = false }: { running?: boolean }) {
   );
 }
 
-function Shell({ children, progress, screen, onReset }: { children: React.ReactNode; progress: Progress; screen: Screen; onReset: () => void }) {
+function Shell({ children, progress, screen, aiMissionActive, onReset }: { children: React.ReactNode; progress: Progress; screen: Screen; aiMissionActive: boolean; onReset: () => void }) {
   const total = progress.completed.length;
   return (
-    <div className={`app screen-${screen}`}>
+    <div className={`app screen-${screen}${aiMissionActive ? ' app--ai' : ''}`}>
       <div className="stars" aria-hidden="true" />
       <header className="topbar">
         <button className="brand" onClick={() => location.reload()} aria-label="Retour à l’accueil">
@@ -291,5 +291,5 @@ export default function App() {
   else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} />;
   else content = <Victory onNewTeam={newTeam} />;
 
-  return <Shell progress={progress} screen={screen} onReset={reset}>{content}</Shell>;
+  return <Shell progress={progress} screen={screen} aiMissionActive={screen === 'mission' && activeMissionId === 'ai'} onReset={reset}>{content}</Shell>;
 }

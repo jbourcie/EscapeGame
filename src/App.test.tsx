@@ -63,6 +63,7 @@ async function solveAI(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /^IA bien entraînée$/i }));
   await user.click(screen.getByRole('button', { name: /Tester l’IA bien entraînée/i }));
   await user.click(screen.getByRole('button', { name: /Tester l’IA mal entraînée/i }));
+  await user.click(screen.getByRole('button', { name: /Comparer les deux réponses/i }));
   await user.click(screen.getByRole('button', { name: /révéler le fragment/i }));
 }
 

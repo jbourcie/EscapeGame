@@ -1,4 +1,5 @@
 import type { Level } from '../../data/missions';
+import type { Observation } from '../../game/classifier';
 
 export type GuidedStep = 1 | 2 | 3 | 4;
 
@@ -27,4 +28,16 @@ export const stepCopy: Record<Level, Record<GuidedStep, StepCopy>> = {
 
 export function readableAmount(value: number): string {
   return value >= 7 ? 'beaucoup' : value >= 4 ? 'moyen' : 'peu';
+}
+
+export function describeKnownExample(item: Observation, level: Level): string {
+  const family = item.label === 'signal' ? 'signal intéressant' : 'parasite';
+  const rhythm = item.regularity >= 7 ? 'très régulier' : 'irrégulier';
+  if (level === 'explorer') {
+    return `${item.name} brille ${readableAmount(item.brightness)} et son rythme est ${rhythm}. On l’a rangé dans la famille des ${item.label === 'signal' ? 'signaux intéressants' : 'parasites'}.`;
+  }
+  if (level === 'scientist') {
+    return `${item.name} : luminosité ${item.brightness}/10 et régularité ${item.regularity}/10. Cet exemple est déjà classé comme ${family}.`;
+  }
+  return `${item.name} a pour caractéristiques (${item.brightness}, ${item.regularity}). Sa classe connue est « ${family} » : la machine utilisera ces deux valeurs pour les comparaisons.`;
 }

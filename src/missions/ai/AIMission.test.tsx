@@ -39,6 +39,18 @@ async function classifyOne(user: ReturnType<typeof userEvent.setup>, id: string,
 afterEach(() => { cleanup(); localStorage.clear(); });
 
 describe('mission IA guidée', () => {
+  it('actualise le texte explicatif sous les cartes à chaque exemple sélectionné', async () => {
+    const user = userEvent.setup();
+    render(<Harness initial={{ ...initialProgress(), level: 'explorer' }} />);
+    await user.click(screen.getByRole('button', { name: /Signal intéressant.*Toucher pour observer/i }));
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('Signal A');
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('brille beaucoup');
+    await user.click(screen.getByRole('button', { name: /Parasite.*Toucher pour observer/i }));
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('Parasite A');
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('brille peu');
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).not.toContain('Signal A');
+  });
+
   it('ouvre à l’étape 1 avec deux exemples seulement et une aide contextuelle', async () => {
     const user = userEvent.setup();
     render(<Harness />);
@@ -60,6 +72,10 @@ describe('mission IA guidée', () => {
     explorer.unmount();
     const scientist = render(<Harness initial={{ ...initialProgress(), level: 'scientist' }} />);
     expect(screen.getByRole('button', { name: /Signal intéressant.*8\/10.*9\/10/i })).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Signal intéressant.*Toucher pour observer/i }));
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('luminosité 8/10 et régularité 9/10');
+    await user.click(screen.getByRole('button', { name: /Parasite.*Toucher pour observer/i }));
+    expect(screen.getByRole('status', { name: /Exemple sélectionné/i }).textContent).toContain('luminosité 3/10 et régularité 2/10');
     scientist.unmount();
     render(<Harness initial={{ ...initialProgress(), level: 'expert' }} />);
     expect(screen.getByText(/Que sont les caractéristiques/i)).toBeTruthy();
@@ -135,6 +151,8 @@ describe('mission IA guidée', () => {
     await user.click(screen.getByRole('button', { name: /Tester l’IA bien entraînée/i }));
     expect(screen.queryByText(/La méthode n’a pas changé/i)).toBeNull();
     await user.click(screen.getByRole('button', { name: /Tester l’IA mal entraînée/i }));
+    expect(screen.getByRole('button', { name: /Comparer les deux réponses/i })).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Comparer les deux réponses/i }));
     expect(screen.getByText(/La méthode n’a pas changé/i)).toBeTruthy();
     expect(loadProgress().fragments.ai).toBeUndefined();
     await user.click(screen.getByRole('button', { name: /révéler le fragment/i }));

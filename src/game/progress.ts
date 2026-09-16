@@ -84,7 +84,7 @@ export function sanitizeProgress(value: unknown): Progress {
   const canLeaveExamples = consulted.includes('signal-a') && consulted.includes('parasite-a');
   const phase = !canLeaveExamples ? 1 : requestedPhase === 4 && Object.keys(placements).length === 4 && (legacy || demoAnswerCorrect) ? 4 : requestedPhase === 3 && demoAnswerCorrect ? 3 : (requestedPhase === 2 || requestedPhase === 3 || requestedPhase === 4) ? 2 : 1;
   const reviewItemId = !legacy && typeof aiRaw.reviewItemId === 'string' && placements[aiRaw.reviewItemId] ? aiRaw.reviewItemId : null;
-  const comparisonStep = phase === 4 && !legacy ? Math.max(0, Math.min(3, Number.isInteger(aiRaw.comparisonStep) ? aiRaw.comparisonStep : 0)) : 0;
+  const comparisonStep = phase === 4 && !legacy ? Math.max(0, Math.min(4, Number.isInteger(aiRaw.comparisonStep) ? aiRaw.comparisonStep : 0)) : 0;
   const helpCounts = Array.isArray(aiRaw.helpCounts) && aiRaw.helpCounts.length === 4 ? aiRaw.helpCounts.map((count) => Number.isInteger(count) ? Math.max(0, Math.min(3, count)) : 0) as [number, number, number, number] : [0, 0, 0, 0] as [number, number, number, number];
   return {
     level,
