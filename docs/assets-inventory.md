@@ -76,3 +76,18 @@ Les objets interactifs définitifs doivent être livrés en SVG optimisé. Les d
 | Indicateur d’équilibre des données | Comparer les proportions | Panneau expérience | Paysage 4:1 | SVG interactif | Compteurs ★ et ◆ en HTML |
 | Levier de modification du jeu d’apprentissage | Déclencher le changement de données | Panneau expérience | Paysage 3:1 | SVG interactif | Bouton HTML |
 | Animation du fragment 6 | Relier les observations au chiffre | Conclusion | Carré 1:1 | SVG animé par CSS | Cartes O1–O4 et chiffre HTML/CSS |
+
+## Finition commune — septembre 2026
+
+Ces éléments remplacent la présentation provisoire de l’accueil et de la carte. Les objets manipulables des six missions conservent leur géométrie et leurs textes.
+
+| Asset créé | Format | Emplacement | Fonction / cache |
+| --- | --- | --- | --- |
+| Château-observatoire nocturne original | SVG, 800×700, ~3 Ko | `public/assets/abbadia-night.svg` | Accueil, illumination finale et victoire ; pré-cache explicite |
+| Gardien mécanique à six expressions | SVG React | `src/components/Observatory.tsx`, `GuideCharacter` | Même guide dans les six missions ; inclus dans le JS pré-caché |
+| Six icônes scientifiques | SVG React 48×48 | `src/components/Observatory.tsx`, `ModuleIcon` | Identification des modules et en-têtes ; inclus dans le JS |
+| Astrolabe, connexions et modules | HTML/CSS | `MachineCore`, `CentralMachine`, `src/observatory.css` | Machine endormie/active, six états de progression ; JS/CSS pré-cachés |
+| Plaques de fragments et transmission | HTML/CSS | `FragmentCollection`, `FragmentReveal`, `CompletionPanel` | Chiffres lisibles, transfert court et sauvegarde ; JS/CSS pré-cachés |
+| Carte de partage originale | PNG, largeur 1200 px, ~1,3 Mo | `public/og.png` | Métadonnées de partage uniquement ; cache explicite, aucun rôle pédagogique |
+
+Aucune police distante, bibliothèque graphique ou image externe. Les SVG React ne nécessitent pas de requête supplémentaire. Le prompt de la carte de partage se trouve dans `.prompts/social-preview.md`. Les titres, consignes, états et chiffres restent en HTML dans tout le parcours.

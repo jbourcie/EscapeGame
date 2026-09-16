@@ -1,3 +1,4 @@
+import { CompletionPanel, MissionHeader, InstructionPanel } from '../../components/Observatory';
 import { useMemo, type Dispatch, type SetStateAction } from 'react';
 import type { Level, Mission } from '../../data/missions';
 import { validateFragment, type Progress } from '../../game/progress';
@@ -90,23 +91,12 @@ export function ComponentMission({ mission, progress, onProgress, onBack }: Prop
   return (
     <section className="component-mission panel panel--wide">
       <div className="component-mission__topline">
-        <button className="back-link" onClick={onBack}>← Retour à la carte</button>
+        <button className="back-link" onClick={onBack}>← Retour au laboratoire</button>
         {!game.complete && <button className="button button--quiet component-reset" onClick={resetMission}>↺ Remettre ce module à zéro</button>}
       </div>
 
-      <header className="component-mission__header">
-        <div>
-          <p className="eyebrow">Module 1 · Composants</p>
-          <h1>{mission.title}</h1>
-        </div>
-        <div className="component-progress" aria-label={`${installedCount} ${installedCount === 1 ? 'composant installé' : 'composants installés'} sur 4`}>
-          <b>{installedCount} <span>sur 4</span></b>
-          <small>composants installés</small>
-          <div>{componentDefinitions.map((item) => <i key={item.id} className={game.placements[item.id] ? 'is-filled' : ''}>{game.placements[item.id] ? '✓' : '○'}</i>)}</div>
-        </div>
-      </header>
-
-      <p className="component-mission__instruction"><span aria-hidden="true">☝</span>{componentInstructions[level]}</p>
+      <MissionHeader mission={mission}><div className="component-progress" aria-label={`${installedCount} ${installedCount === 1 ? 'composant installé' : 'composants installés'} sur 4`}><b>{installedCount} <span>sur 4</span></b><small>composants installés</small></div></MissionHeader>
+      <InstructionPanel mood={game.feedback.kind === 'error' ? 'error' : game.complete ? 'success' : 'explain'}><p>{componentInstructions[level]}</p></InstructionPanel>
 
       <div className={`component-game ${game.complete ? 'component-game--complete' : ''}`}>
         <aside className="component-reserve" aria-label="Réserve de composants">
@@ -187,13 +177,8 @@ export function ComponentMission({ mission, progress, onProgress, onBack }: Prop
         </div>
       )}
 
-      {game.complete && (
-        <div className="component-success" aria-live="polite">
-          <span className="component-success__seal" aria-hidden="true">✓</span>
-          <div><p className="eyebrow">Fragment 1 enregistré automatiquement</p><h2>Le cœur de la machine bat à nouveau</h2><p>{mission.learning}</p></div>
-          <button className="button button--primary" onClick={onBack}>Retourner à la carte →</button>
-        </div>
-      )}
+      {game.complete && <CompletionPanel mission={mission} title="Le cœur de la machine bat à nouveau" onBack={onBack}/>}
+
     </section>
   );
 }

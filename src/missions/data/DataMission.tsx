@@ -1,3 +1,4 @@
+import { CompletionPanel, MissionHeader, InstructionPanel } from '../../components/Observatory';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import type { Mission } from '../../data/missions';
 import { validateFragment, type Progress } from '../../game/progress';
@@ -27,8 +28,8 @@ export function DataMission({ mission, progress, onProgress, onBack }: Props) {
   const reset = () => { const empty=[0,0,0,0]; setBits(empty); setFeedback('Pupitre remis à zéro.'); onProgress((current)=>({...current,binaryBits:empty,attempts:removeKey(current.attempts,'data'),hints:removeKey(current.hints,'data')})); };
   const instruction = level==='explorer' ? 'Reproduis les quatre étoiles : vide, pleine, vide, pleine.' : level==='expert' ? 'L’observation porte la valeur 5. Construis son mot binaire avec les poids disponibles.' : 'Reproduis le mot binaire 0101 avec les poids 8, 4, 2 et 1.';
   return <section className="data-mission panel panel--wide">
-    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour à la carte</button>{!success&&<button className="button button--quiet" onClick={reset}>↺ Réinitialiser le pupitre</button>}</div>
-    <header className="digital-mission-header"><div><p className="eyebrow">Module 4 · Données</p><h1>{mission.title}</h1></div><p>{instruction}</p></header>
+    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour au laboratoire</button>{!success&&<button className="button button--quiet" onClick={reset}>↺ Réinitialiser le pupitre</button>}</div>
+    <MissionHeader mission={mission}/><InstructionPanel><p>{instruction}</p></InstructionPanel>
     <div className={`binary-console ${success?'is-complete':''}`}>
       <div className="binary-observation"><span>Observation céleste</span>{level==='explorer'?<div aria-label="Modèle : étoile éteinte, allumée, éteinte, allumée"><i>☆</i><i>★</i><i>☆</i><i>★</i></div>:level==='expert'?<strong>Valeur observée : cinq unités</strong>:<strong>Signal reçu : 0101</strong>}</div>
       <div className="binary-dials" role="group" aria-label="Quatre positions binaires">
@@ -40,6 +41,6 @@ export function DataMission({ mission, progress, onProgress, onBack }: Props) {
     <div className="binary-actions"><button className="button button--primary" disabled={success} onClick={verify}>✦ Vérifier l’observation</button></div>
     <div className="component-feedback component-feedback--idle" role="status" aria-live="polite"><span>i</span><p>{feedback}</p></div>
     {!success&&<div className="component-hints"><button className="button button--hint" onClick={()=>onProgress((current)=>({...current,hints:{...current.hints,data:Math.min(mission.hints[level].length,hintCount+1)}}))}>Obtenir un indice</button>{hintCount>0&&<ol>{mission.hints[level].slice(0,hintCount).map((hint,index)=><li key={hint}><b>Indice {index+1}</b>{hint}</li>)}</ol>}</div>}
-    {success&&<div className="component-success"><span className="component-success__seal">5</span><div><p className="eyebrow">Fragment 4 enregistré automatiquement</p><h2>Le message céleste est décodé</h2><p>{mission.learning}{level==='expert'?' Le bit de poids fort est à gauche ; le bit de poids faible est à droite.':''}</p></div><button className="button button--primary" onClick={onBack}>Retourner à la carte →</button></div>}
+    {success&&<CompletionPanel mission={mission} title="Le message céleste est décodé" onBack={onBack}>{mission.learning}{level==='expert'?' Le bit de poids fort est à gauche ; le bit de poids faible est à droite.':''}</CompletionPanel>}
   </section>;
 }

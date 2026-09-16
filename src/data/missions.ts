@@ -18,7 +18,7 @@ export type Mission = {
 export const levels: { id: Level; name: string; age: string; description: string; symbol: string }[] = [
   { id: 'explorer', name: 'Explorateur', age: '6 à 8 ans', description: 'Des mots simples et davantage de petits coups de pouce.', symbol: '✦' },
   { id: 'scientist', name: 'Scientifique', age: '9 à 11 ans', description: 'Des consignes précises et des indices équilibrés.', symbol: '⌁' },
-  { id: 'expert', name: 'Expert', age: '12 ans et +', description: 'Le vocabulaire des scientifiques et moins d’indices.', symbol: '⌬' },
+  { id: 'expert', name: 'Expert', age: '12 ans et plus', description: 'Le vocabulaire des scientifiques et moins d’indices.', symbol: '⌬' },
 ];
 
 export const missions: Mission[] = [

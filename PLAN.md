@@ -2,30 +2,30 @@
 
 ## Parcours utilisateur
 
-1. L'équipe découvre la machine arrêtée et lance la mission.
-2. Elle choisit un niveau : Explorateur (6–8 ans), Scientifique (9–11 ans) ou Expert (12+).
+1. L'équipe découvre le château-observatoire et la machine arrêtée.
+2. Elle choisit sur l’accueil un niveau : Explorateur (6–8 ans), Scientifique (9–11 ans) ou Expert (12+).
 3. Elle choisit librement l'un des six modules sur la carte.
 4. Pour les six modules, elle joue directement à l’écran et chaque fragment est enregistré automatiquement.
-5. Une réussite conserve le fragment, affiche l'idée pédagogique, puis ramène à la carte.
-6. Après les six réussites, l'équipe saisit les fragments dans l'ordre imposé et redémarre la machine.
-7. L'écran de victoire récapitule les notions et permet d'effacer la partie pour une nouvelle équipe.
+5. Une réussite conserve le fragment, affiche l'idée pédagogique, puis propose le retour au laboratoire.
+6. Après les six réussites, le retour au laboratoire ouvre la finale : les fragments s’assemblent automatiquement en `472596`, puis l’équipe réveille les six mécanismes.
+7. La victoire propose le carnet des six découvertes, le rejeu sans effacer les fragments et une nouvelle équipe après confirmation.
 
 ## Écrans
 
-- **Accueil** : titre, machine scientifique arrêtée, introduction et bouton de départ.
+- **Accueil** : château nocturne, machine endormie, introduction, choix du niveau et entrée dans le laboratoire.
 - **Choix du niveau** : trois cartes avec âge, ton et quantité d'aide annoncés.
-- **Carte des missions** : six modules, état textuel et visuel, progression, accès libre et finale verrouillée/déverrouillée.
+- **Laboratoire central** : machine à six modules reliés à un astrolabe, états disponible/en cours/terminé et sélectionné, six plaques de fragments, accès libre.
 - **Mission** : mini-jeu tactile pour les six modules, y compris l’IA.
 - **Activité IA** : quatre étapes guidées — observer deux exemples, suivre une comparaison pas à pas, classer quatre observations une par une, comparer deux jeux d’apprentissage avant le fragment 6.
-- **Finale** : rappel ordonné des six fragments, saisie du code, redémarrage animé, victoire et nouvelle équipe.
+- **Finale** : rappel ordonné des fragments, code reconstitué, six activations, réveil, illumination du château, victoire et carnet.
 
 ## États du jeu
 
-- `welcome`, `level`, `map`, `mission`, `finale`, `victory` pour la navigation.
+- `welcome`, `level`, `map`, `mission`, `finale`, `victory`, `discoveries` pour la navigation.
 - Niveau choisi : `explorer`, `scientist` ou `expert`.
 - Par mission : `not-started`, `in-progress`, `completed`.
 - Progression persistée : identifiant du niveau, missions validées, fragments, tentatives, indices et état détaillé de la mission IA.
-- État transitoire non persisté : saisies, messages de formulaire et animation de réussite.
+- État transitoire non persisté : navigation, messages, animation de réussite et partie de rejeu. La préférence d’animation est conservée séparément.
 
 ## Six missions
 
@@ -121,12 +121,15 @@ Le socle partagé sépare :
 
 Pour l’IA, chaque étape ne présente qu’une consigne. La démonstration avance sur action de l’enfant ; la question de compréhension ne pénalise pas une mauvaise réponse. Les quatre cartes rejoignent successivement les exemples connus. La comparaison finale emploie la même observation et le même classifieur avec deux jeux de données différents. La progression détaillée et les coups de pouce contextuels sont locaux et persistants.
 
-La migration numérique des six missions est achevée. Les visuels définitifs restent à produire.
+La migration numérique des six missions est achevée. La finition commune utilise désormais des SVG locaux et du CSS ; les décors pédagogiques existants sont conservés.
 
 ### Architecture des assets
 
 - `src/assets/game/components/` : objets interactifs temporaires puis SVG définitifs.
-- `src/assets/game/backgrounds/` : décors narratifs WebP ou PNG.
+- `public/assets/abbadia-night.svg` : château-observatoire original, pré-caché.
+- `src/components/Observatory.tsx` : guide, icônes, machine et plaques.
+- `src/observatory.css` : tokens, états communs et adaptations tablette/mobile.
+- `src/assets/game/backgrounds/` : réserve pour de futurs décors optionnels.
 - `src/assets/game/ui/` : éléments d’interface locaux et états de jeu.
 - `src/assets/placeholders/` : éléments provisoires historiques.
 - `.prompts/` : briefs et prompts de production graphique, jamais des dépendances d’exécution.
@@ -137,3 +140,13 @@ Les visuels interactifs restent séparés des libellés HTML afin de préserver 
 ### Entrées IoT futures
 
 La logique de jeu est pensée autour d’événements `select`, `place` et `reset`. L’écran est le seul adaptateur de cette version. Une interface `MissionInputAdapter` pourra plus tard convertir une entrée matérielle en ces mêmes événements sans changer les règles du puzzle. Aucun Web Bluetooth, Web Serial, MQTT, réseau local ou code microcontrôleur n’est introduit avant validation du jeu entièrement tactile.
+
+## Finition visuelle et narrative — septembre 2026
+
+- Composants partagés : `MissionHeader`, `InstructionPanel`, `GuideCharacter`, `ModuleIcon`, `MachineCore`, `CentralMachine`, `FragmentCollection`, `FragmentReveal`, `CompletionPanel`. Les boutons et zones de dépôt existants sont conservés.
+- Guide unique : neutre, explication, encouragement, erreur bienveillante, réussite et surprise ; textes pédagogiques en HTML.
+- La finale se prépare au retour de la dernière mission, sans interrompre la lecture de sa réussite. Le code est dérivé des fragments de la sauvegarde dans l’ordre des missions, puis vérifié contre `finalCode`.
+- Animation finale de moins de cinq secondes, pouvant être passée ; en mouvement réduit, l’équipe avance par boutons sans animation ni attente. Une préférence locale permet aussi de neutraliser les animations CSS.
+- Rejeu : partie transitoire vierge pour la mission choisie, avec le niveau de l’équipe ; les fragments persistés ne sont jamais effacés. Retour à l’accueil et nouvelle équipe clairement séparés.
+- Cache `abbadie-v9` : château et carte de partage ajoutés, scripts/styles toujours issus du build. Nettoyage limité aux caches `abbadie-*` obsolètes.
+- Vérifications automatisées et limites visuelles consignées dans `docs/validation-finition.md`.

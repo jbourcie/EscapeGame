@@ -1,6 +1,6 @@
-# Le dernier calcul d’Antoine d’Abbadie
+# Le Mystère de la Machine d’Abbadia
 
-Prototype fonctionnel d’un mini escape game pédagogique pour tablette. Les six missions sont entièrement numériques et tactiles. L’application n’utilise ni compte, ni backend, ni API distante.
+Mini escape game pédagogique pour tablette. Les six missions sont entièrement numériques et tactiles. L’application n’utilise ni compte, ni backend, ni API distante.
 
 ## Prérequis et lancement
 
@@ -41,11 +41,11 @@ L’icône et le manifeste sont inclus localement. Une fois installée, l’appl
 4. Activer le mode hors ligne, puis recharger la page.
 5. Parcourir les missions, valider les fragments et ouvrir la finale.
 
-Le service worker pré-cache la coque ainsi que les fichiers JavaScript et CSS du build dès son installation. Les navigations hors ligne reviennent vers la page principale.
+Le service worker `abbadie-v9` pré-cache la coque, les scripts et styles du build, le château SVG et les visuels locaux dès son installation. Attendre la fin de l’installation avant de couper le réseau. Les anciens caches du jeu sont retirés à l’activation ; les caches d’autres applications sont conservés. Les navigations hors ligne reviennent vers la page principale.
 
 ## Progression locale
 
-Le niveau, les missions commencées et validées, les fragments, tentatives et indices sont conservés dans `localStorage`, uniquement sur l’appareil. « Recommencer » demande confirmation ; « Nouvelle équipe » sur la victoire efface immédiatement la progression.
+Le niveau, les missions commencées et validées, les fragments, tentatives et indices sont conservés dans `localStorage`, uniquement sur l’appareil. « Nouvelle équipe » demande toujours confirmation avant d’effacer la progression, depuis le laboratoire comme depuis la victoire. « Retour à l’accueil » conserve la partie.
 
 La mission IA conserve aussi l’étape guidée, les exemples consultés, la démonstration, les observations classées, l’aide utilisée et la comparaison des deux jeux de données. Une ancienne sauvegarde IA est reprise à une étape sûre sans perdre les autres fragments. Son bouton « Réinitialiser la mission IA » ne touche pas aux cinq autres fragments. Le fragment 6 apparaît et s’enregistre après les quatre étapes.
 
@@ -69,4 +69,12 @@ La mission IA conserve aussi l’étape guidée, les exemples consultés, la dé
 
 ## Limites volontaires de cette itération
 
-Les illustrations des six missions numériques sont des formes CSS temporaires ; les assets définitifs ne sont pas produits. La mission IA emploie un classifieur pédagogique local à trois voisins, pas une IA distante. Le vote affiché est une prédiction et non une probabilité ou une certitude.
+Le château, le guide, les icônes et la machine centrale utilisent des SVG/CSS locaux. Les surfaces interactives des six missions restent celles validées précédemment. La mission IA emploie un classifieur pédagogique local à trois voisins, pas une IA distante. Le vote affiché est une prédiction et non une probabilité ou une certitude.
+
+## Finale, rejeu et accessibilité
+
+Les six fragments `4`, `7`, `2`, `5`, `9`, `6` s’assemblent automatiquement en `472596`. Aucune saisie du code n’est demandée. Après le réveil, l’équipe peut revoir ses découvertes, rejouer une mission vierge sans perdre sa progression ou confirmer une remise à zéro globale.
+
+Le bouton « Animations » mémorise une préférence sur la tablette ; `prefers-reduced-motion` est également respecté. Dans ce mode, la finale avance sur action de l’équipe. Tous les éléments importants sont des contrôles HTML accessibles au clavier. Les mises en page visent 768×1024, 1024×768 et les petites largeurs.
+
+La validation automatique ne remplace pas une inspection visuelle : voir les étapes restantes dans [le rapport de vérification](docs/validation-finition.md).

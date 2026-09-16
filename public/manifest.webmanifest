@@ -1,7 +1,7 @@
 {
-  "name": "Le dernier calcul d’Antoine d’Abbadie",
-  "short_name": "Calcul d’Abbadie",
-  "description": "Mini escape game pédagogique hybride sur l’informatique.",
+  "name": "Le Mystère de la Machine d’Abbadia",
+  "short_name": "Machine d’Abbadia",
+  "description": "Une aventure scientifique de la Nuit de la Recherche, à Abbadia.",
   "lang": "fr",
   "start_url": "/",
   "scope": "/",

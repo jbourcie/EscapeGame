@@ -1,10 +1,11 @@
-# Assets graphiques à produire ensuite
+# Évolutions graphiques optionnelles
 
-1. Illustration principale de la machine scientifique arrêtée puis active.
-2. Silhouette originale du château-observatoire face à l’océan.
-3. Six illustrations de module dans un style néogothique scientifique cohérent.
-4. Jeu local de pictogrammes composants, instructions, mémoire, binaire, capteurs et IA.
-5. Texture légère de ciel étoilé et éléments décoratifs d’instruments du XIXe siècle.
-6. Icônes PWA finales en 192, 512 et format maskable.
+La finition commune est réalisée avec un château SVG original, une machine HTML/CSS, un guide SVG et six icônes cohérentes. Voir `assets-inventory.md` et `.prompts/visual-direction.md`.
 
-Les sources devront être originales ou disposer d’une licence documentée. Les prompts éventuels seront conservés dans `.prompts/`.
+Les prochaines illustrations éventuelles doivent garder les dimensions et la lisibilité des objets pédagogiques déjà validés. Aucun remplacement n’est requis pour jouer.
+
+1. Raffiner les silhouettes CSS des objets en SVG détourés sans texte, en conservant leurs zones tactiles.
+2. Si souhaité, enrichir le château avec le WebP décrit dans la direction visuelle ; conserver les zones calmes et le repli SVG.
+3. Harmoniser ultérieurement les icônes d’installation PWA existantes, sans toucher à leur rôle maskable.
+
+Les sources doivent être originales ou disposer d’une licence documentée. Tous les prompts sont conservés dans `.prompts/`. Tout asset ajouté au jeu doit être local et pré-caché.

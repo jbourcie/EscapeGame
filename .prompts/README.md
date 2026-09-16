@@ -1,3 +1,3 @@
 # Prompts graphiques
 
-Conserver ici les futurs prompts de génération des illustrations définitives. Aucun asset généré n'est inclus dans cette itération.
+Direction visuelle dans `visual-direction.md`. Prompt de la carte de partage générée dans `social-preview.md`. Les visuels du jeu sont locaux et restent indépendants de tout service de génération.

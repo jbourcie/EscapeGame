@@ -1,3 +1,4 @@
+import { CompletionPanel, MissionHeader, InstructionPanel } from '../../components/Observatory';
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import type { Mission } from '../../data/missions';
 import { validateFragment, type Progress } from '../../game/progress';
@@ -73,8 +74,8 @@ export function ProgramMission({ mission, progress, onProgress, onBack }: Props)
   const success = completed || progress.fragments.program === '7';
 
   return <section className="program-mission panel panel--wide">
-    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour à la carte</button>{!success && <button className="button button--quiet" onClick={reset}>↺ Réinitialiser ce programme</button>}</div>
-    <header className="digital-mission-header"><div><p className="eyebrow">Module 2 · Programme</p><h1>{mission.title}</h1></div><p>{level === 'explorer' ? 'Remets les bons blocs dans l’ordre.' : level === 'expert' ? '4 blocs maximum · une boucle obligatoire.' : 'Choisis les instructions utiles dans la réserve.'}</p></header>
+    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour au laboratoire</button>{!success && <button className="button button--quiet" onClick={reset}>↺ Réinitialiser ce programme</button>}</div>
+    <MissionHeader mission={mission}/><InstructionPanel><p>{level === 'explorer' ? 'Remets les bons blocs dans l’ordre.' : level === 'expert' ? '4 blocs maximum · une boucle obligatoire.' : 'Choisis les instructions utiles dans la réserve.'}</p></InstructionPanel>
     <div className="program-workbench">
       <div className="observatory-grid" role="grid" aria-label="Grille de l’observatoire">
         {Array.from({ length: 25 }, (_, index) => { const row = Math.floor(index / 5); const column = index % 5; const key = `${row}-${column}`; const obstacle = programGrid.obstacles.some(([r,c]) => r===row && c===column); const orion = row===0 && column===4; const celestial = programGrid.celestial.some(([r,c]) => r===row && c===column); const here = robot.row===row && robot.column===column; return <div role="gridcell" key={key} className={`sky-cell ${visited.includes(key) ? 'is-visited' : ''} ${obstacle ? 'is-obstacle' : ''} ${orion ? 'is-orion' : ''}`}><span>{obstacle ? '▰' : orion ? '✦' : celestial ? '· ✦' : ''}</span>{here && <b className="robot" aria-label={`Automate orienté ${robot.direction}`}>{arrow[robot.direction]}</b>}</div>; })}
@@ -89,6 +90,6 @@ export function ProgramMission({ mission, progress, onProgress, onBack }: Props)
     </div>
     <div className="component-feedback component-feedback--idle" role="status" aria-live="polite"><span>i</span><p>{feedback}</p></div>
     {!success && <div className="component-hints"><button className="button button--hint" onClick={() => onProgress((current) => ({ ...current, hints: { ...current.hints, program: Math.min(mission.hints[level].length, hintCount+1) } }))}>Obtenir un indice</button>{hintCount>0 && <ol>{mission.hints[level].slice(0,hintCount).map((hint,index)=><li key={hint}><b>Indice {index+1}</b>{hint}</li>)}</ol>}</div>}
-    {success && <div className="program-success component-success"><span className="component-success__seal">7</span><div><p className="eyebrow">Fragment 2 enregistré automatiquement</p><h2>La constellation d’Orion est reliée</h2><p>{mission.learning}</p></div><button className="button button--primary" onClick={onBack}>Retourner à la carte →</button></div>}
+    {success && <CompletionPanel mission={mission} title="La constellation d’Orion est reliée" onBack={onBack}>{mission.learning}</CompletionPanel>}
   </section>;
 }

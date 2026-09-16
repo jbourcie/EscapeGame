@@ -1,3 +1,4 @@
+import { CompletionPanel, MissionHeader, InstructionPanel } from '../../components/Observatory';
 import { useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import type { Mission } from '../../data/missions';
 import { DraggableItem } from '../../game/interactions/DraggableItem';
@@ -23,8 +24,8 @@ export function EverywhereMission({mission,progress,onProgress,onBack}:Props){
   async function run(){const result=testChain(placements);stop.current=false;for(const current of result.stages){setStage(current);await new Promise((resolve)=>window.setTimeout(resolve,import.meta.env.MODE==='test'?0:window.matchMedia?.('(prefers-reduced-motion: reduce)').matches?80:420));if(stop.current)return;}setFeedback(result.message);if(result.success)onProgress((current)=>validateFragment(current,mission.id,mission.answer).progress);else onProgress((current)=>validateFragment(current,mission.id,'').progress);}
   const used=new Set(Object.values(placements));
   return <section className="everywhere-mission panel panel--wide">
-    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour à la carte</button>{!success&&<button className="button button--quiet" onClick={reset}>↺ Réinitialiser le laboratoire</button>}</div>
-    <header className="digital-mission-header"><div><p className="eyebrow">Module 5 · Informatique partout</p><h1>{mission.title}</h1></div><p>{level==='expert'?'La lampe doit s’allumer automatiquement lorsque l’obscurité tombe.':'Construis la chaîne qui observe, décide puis agit.'}</p></header>
+    <div className="component-mission__topline"><button className="back-link" onClick={onBack}>← Retour au laboratoire</button>{!success&&<button className="button button--quiet" onClick={reset}>↺ Réinitialiser le laboratoire</button>}</div>
+    <MissionHeader mission={mission}/><InstructionPanel><p>{level==='expert'?'La lampe doit s’allumer automatiquement lorsque l’obscurité tombe.':'Construis la chaîne qui observe, décide puis agit.'}</p></InstructionPanel>
     <div className={`castle-lab lab-stage--${stage} ${success?'is-success':''}`}>
       <aside className="chain-reserve"><h2>Objets du laboratoire</h2><p>Sélectionne une carte puis touche une zone, ou fais-la glisser.</p><div>{items.filter(({id})=>!used.has(id)).map((item)=><DraggableItem key={item.id} itemId={item.id} selected={selectedId===item.id} dragging={draggingId===item.id} locked={false} onSelect={(id)=>setSelectedId((current)=>current===id?null:id)} onDragStart={setDraggingId} onDragEnd={()=>setDraggingId(null)} onDrop={place}><span className="chain-card"><b>{item.icon}</b><span><strong>{item.title}</strong><small>{item.description}</small></span></span></DraggableItem>)}</div></aside>
       <div className="chain-machine">
@@ -35,6 +36,6 @@ export function EverywhereMission({mission,progress,onProgress,onBack}:Props){
     </div>
     <div className="component-feedback component-feedback--idle" role="status" aria-live="polite"><span>i</span><p>{feedback}</p></div>
     {!success&&<div className="component-hints"><button className="button button--hint" onClick={()=>onProgress((current)=>({...current,hints:{...current.hints,everywhere:Math.min(mission.hints[level].length,hintCount+1)}}))}>Obtenir un indice</button>{hintCount>0&&<ol>{mission.hints[level].slice(0,hintCount).map((hint,index)=><li key={hint}><b>Indice {index+1}</b>{hint}</li>)}</ol>}</div>}
-    {success&&<div className="component-success"><span className="component-success__seal">9</span><div><p className="eyebrow">Fragment 5 enregistré automatiquement</p><h2>La lampe révèle le cadran du château</h2><p>{mission.learning}{level==='expert'?' Cet ensemble autonome est un système embarqué.':''}</p></div><button className="button button--primary" onClick={onBack}>Retourner à la carte →</button></div>}
+    {success&&<CompletionPanel mission={mission} title="La lampe révèle le cadran du château" onBack={onBack}>{mission.learning}{level==='expert'?' Cet ensemble autonome est un système embarqué.':''}</CompletionPanel>}
   </section>;
 }
