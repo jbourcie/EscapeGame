@@ -12,6 +12,7 @@ export type Progress = {
   hints: Record<string, number>;
   digitalPlacements: Record<string, Record<string, string>>;
   programBlocks: string[];
+  binaryBits: number[];
   aiSimulationDone: boolean;
 };
 
@@ -24,6 +25,7 @@ export const initialProgress = (): Progress => ({
   hints: {},
   digitalPlacements: {},
   programBlocks: [],
+  binaryBits: [0, 0, 0, 0],
   aiSimulationDone: false,
 });
 
@@ -60,6 +62,9 @@ export function sanitizeProgress(value: unknown): Progress {
     hints: numberRecord(raw.hints),
     digitalPlacements,
     programBlocks: Array.isArray(raw.programBlocks) ? raw.programBlocks.filter((id): id is string => typeof id === 'string') : [],
+    binaryBits: Array.isArray(raw.binaryBits) && raw.binaryBits.length === 4
+      ? raw.binaryBits.map((bit) => bit === 1 ? 1 : 0)
+      : empty.binaryBits,
     aiSimulationDone: raw.aiSimulationDone === true,
   };
 }

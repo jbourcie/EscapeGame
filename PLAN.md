@@ -5,7 +5,7 @@
 1. L'équipe découvre la machine arrêtée et lance la mission.
 2. Elle choisit un niveau : Explorateur (6–8 ans), Scientifique (9–11 ans) ou Expert (12+).
 3. Elle choisit librement l'un des six modules sur la carte.
-4. Pour les trois premiers modules, elle joue directement à l’écran et le fragment est enregistré automatiquement ; les trois autres utilisent encore le matériel physique et une saisie du chiffre apparu.
+4. Pour les cinq premiers modules, elle joue directement à l’écran et le fragment est enregistré automatiquement ; seule la mission IA utilise encore le matériel physique et une saisie du chiffre apparu.
 5. Une réussite conserve le fragment, affiche l'idée pédagogique, puis ramène à la carte.
 6. Après les six réussites, l'équipe saisit les fragments dans l'ordre imposé et redémarre la machine.
 7. L'écran de victoire récapitule les notions et permet d'effacer la partie pour une nouvelle équipe.
@@ -15,7 +15,7 @@
 - **Accueil** : titre, machine scientifique arrêtée, introduction et bouton de départ.
 - **Choix du niveau** : trois cartes avec âge, ton et quantité d'aide annoncés.
 - **Carte des missions** : six modules, état textuel et visuel, progression, accès libre et finale verrouillée/déverrouillée.
-- **Mission** : mini-jeu tactile pour Composants, Programme et Mémoire ; parcours hybride avec saisie numérique pour les trois missions restantes.
+- **Mission** : mini-jeu tactile pour Composants, Programme, Mémoire, Données et Informatique partout ; parcours hybride pour la mission IA.
 - **Activité IA** : après la validation du module 6, classifieur local à exemples, cas clair puis cas ambigu/données déséquilibrées.
 - **Finale** : rappel ordonné des six fragments, saisie du code, redémarrage animé, victoire et nouvelle équipe.
 
@@ -115,8 +115,8 @@ Le socle partagé sépare :
 1. **Composants — cette itération** : placement numérique complet des quatre pièces, apparition automatique du fragment 4 et persistance des placements.
 2. **Programme — cette itération** : grille tactile, blocs ordonnables, moteur déterministe, exécution animée et fragment 7 automatique.
 3. **Mémoire — cette itération** : tri tactile de cartes entre RAM et stockage, feedback par niveau et fragment 2 automatique.
-4. **Données** : interrupteurs-étoiles et décodage binaire local.
-5. **Informatique partout** : sélection d’objets puis construction ordonnée de la chaîne capteur-programme-action.
+4. **Données — cette itération** : interrupteurs-étoiles, calcul binaire local et fragment 5 automatique.
+5. **Informatique partout — cette itération** : chaîne capteur-programme-action testable et fragment 9 automatique.
 6. **Intelligence artificielle** : classement tactile des observations, relié à la simulation locale existante.
 
 La migration reste progressive. Tant qu’une mission n’est pas migrée, son parcours hybride et sa validation manuelle restent intacts.

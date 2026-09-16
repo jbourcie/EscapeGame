@@ -33,6 +33,20 @@ async function solveMemory(user: ReturnType<typeof userEvent.setup>) {
   for (const title of ['Photographie enregistrée','Carnet scientifique sauvegardé','Carte téléchargée','Archive d’observations']) { await user.click(screen.getByRole('button',{name:new RegExp(title,'i')})); await user.click(screen.getByRole('button',{name:/Bibliothèque/i})); }
 }
 
+async function solveData(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('button', { name: /Poids 4, étoile éteinte/i }));
+  await user.click(screen.getByRole('button', { name: /Poids 1, étoile éteinte/i }));
+  await user.click(screen.getByRole('button', { name: /Vérifier l’observation/i }));
+}
+
+async function solveEverywhere(user: ReturnType<typeof userEvent.setup>) {
+  await placeComponent(user, /Capteur de luminosité/i, /Capteur, observe/i);
+  await placeComponent(user, /Règle programmée/i, /Programme, décide/i);
+  await placeComponent(user, /Lampe commandée/i, /Action, agit/i);
+  await user.click(screen.getByRole('button', { name: /Tester le système/i }));
+  await waitFor(() => expect(screen.getByRole('heading', { name: /La lampe révèle/i })).toBeTruthy());
+}
+
 beforeEach(() => {
   localStorage.clear();
   window.scrollTo = vi.fn();
@@ -60,12 +74,16 @@ describe('parcours d’équipe', () => {
         await solveProgram(user);
       } else if (mission.id === 'memory') {
         await solveMemory(user);
+      } else if (mission.id === 'data') {
+        await solveData(user);
+      } else if (mission.id === 'everywhere') {
+        await solveEverywhere(user);
       } else {
         const input = screen.getByLabelText(/Quel chiffre apparaît/i);
         await user.type(input, mission.answer);
         await user.click(screen.getByRole('button', { name: /Tester le fragment/i }));
       }
-      if (mission.id !== 'program') expect(screen.getByRole('heading', { name: mission.id === 'components' ? /Le cœur de la machine bat/i : mission.id === 'memory' ? /La bibliothèque révèle/i : /Module réparé/i })).toBeTruthy();
+      if (!['program','everywhere'].includes(mission.id)) expect(screen.getByRole('heading', { name: mission.id === 'components' ? /Le cœur de la machine bat/i : mission.id === 'memory' ? /La bibliothèque révèle/i : mission.id === 'data' ? /Le message céleste/i : /Module réparé/i })).toBeTruthy();
       await user.click(screen.getByRole('button', { name: /Retourner à la carte/i }));
     }
 

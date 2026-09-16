@@ -5,6 +5,8 @@ import { finalCode, getMission, levels, missions, type Level, type Mission } fro
 import { ComponentMission } from './missions/components/ComponentMission';
 import { ProgramMission } from './missions/program/ProgramMission';
 import { MemoryMission } from './missions/memory/MemoryMission';
+import { DataMission } from './missions/data/DataMission';
+import { EverywhereMission } from './missions/everywhere/EverywhereMission';
 
 type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale' | 'victory';
 
@@ -58,7 +60,7 @@ function Welcome({ hasProgress, onStart, onResume }: { hasProgress: boolean; onS
           <button className="button button--primary" onClick={onStart}>{hasProgress ? 'Nouvelle mission' : 'Commencer la mission'} <span aria-hidden="true">→</span></button>
           {hasProgress && <button className="button button--secondary" onClick={onResume}>Reprendre la partie</button>}
         </div>
-        <p className="helper"><span aria-hidden="true">◌</span> Six énigmes physiques • En équipe • Environ 30 minutes</p>
+        <p className="helper"><span aria-hidden="true">◌</span> Six énigmes pédagogiques • En équipe • Environ 30 minutes</p>
       </div>
       <div className="machine-stage"><Machine /><div className="machine-caption"><span className="status-dot" /> Système en sommeil</div></div>
     </section>
@@ -96,7 +98,7 @@ function MissionMap({ progress, onOpen, onFinale, onLevel }: { progress: Progres
         <div><p className="eyebrow">Carte de la machine</p><h1>Quel module allez-vous réparer ?</h1></div>
         <button className="level-pill" onClick={onLevel} aria-label="Changer de niveau">{level?.symbol} {level?.name} · changer</button>
       </div>
-      <p className="lead lead--small">Choisissez librement. Les modules numériques se jouent à l’écran ; les autres utilisent encore le matériel physique.</p>
+      <p className="lead lead--small">Choisissez librement. Les cinq premiers modules se jouent à l’écran ; l’activité IA conserve encore son parcours hybride.</p>
       <div className="mission-grid">
         {missions.map((mission) => {
           const completed = progress.completed.includes(mission.id);
@@ -281,6 +283,8 @@ export default function App() {
   else if (screen === 'mission' && activeMission?.id === 'components') content = <ComponentMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission?.id === 'program') content = <ProgramMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission?.id === 'memory') content = <MemoryMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
+  else if (screen === 'mission' && activeMission?.id === 'data') content = <DataMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
+  else if (screen === 'mission' && activeMission?.id === 'everywhere') content = <EverywhereMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission) content = <MissionScreen key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} />;
   else content = <Victory onNewTeam={newTeam} />;

@@ -35,3 +35,29 @@ Les objets interactifs définitifs doivent être livrés en SVG optimisé. Les d
 | Effets RAM | Activation rapide/volatile | Table et mécanisme | Bandeau 3:1 | SVG interactif | Lueur CSS |
 | Effets de stockage | Remplissage des rayonnages | Bibliothèque | Portrait 2:3 | SVG interactif | Vignettes CSS |
 | Animation du chiffre 2 | Révéler le fragment | Mécanisme central | Carré 1:1 | SVG animé par CSS | Texte HTML/CSS |
+
+## Mission Données
+
+| Asset | Rôle | Emplacement prévu | Proportion | Format conseillé | Temporaire actuel |
+| --- | --- | --- | --- | --- | --- |
+| Cadran binaire | Porter les quatre positions | Pupitre central | Paysage 4:1 | SVG interactif | Panneaux et cercles CSS |
+| Étoiles allumées/éteintes | Représenter 1 et 0 | Chaque cadran | Carré 1:1 | SVG interactif | Glyphes ★ et ☆ |
+| Poids 8, 4, 2, 1 | Donner la valeur de position | Haut des cadrans | Paysage 2:1 | Texte HTML associé au SVG | Libellés HTML |
+| Circuit lumineux | Montrer les valeurs actives | Sous les cadrans | Paysage 4:1 | SVG interactif | Traits et lueurs CSS |
+| Animation du fragment 5 | Transformer le total en fragment | Jauge finale | Carré 1:1 | SVG animé par CSS | Texte et jauge CSS |
+
+## Mission Informatique partout
+
+| Asset | Rôle | Emplacement prévu | Proportion | Format conseillé | Temporaire actuel |
+| --- | --- | --- | --- | --- | --- |
+| Capteur de luminosité | Mesurer la lumière | Carte et zone Capteur | Carré 1:1 | SVG interactif | Glyphe ◉ |
+| Thermomètre | Alternative pédagogique | Réserve | Portrait 1:2 | SVG interactif | Glyphe ♨ |
+| Miroir | Objet non informatisé | Réserve | Portrait 2:3 | SVG interactif | Glyphe ◇ |
+| Câble | Transport électrique sans décision | Réserve | Paysage 3:1 | SVG interactif | Glyphe ⌁ |
+| Bouton mécanique | Entrée humaine, non ambiante | Réserve | Carré 1:1 | SVG interactif | Cercle CSS |
+| Engrenage | Mouvement sans programme | Réserve | Carré 1:1 | SVG interactif | Glyphe ⚙ |
+| Règle programmée | Traiter la mesure | Zone Programme | Paysage 3:2 | SVG interactif + texte HTML | Carte HTML/CSS |
+| Lampe commandée | Produire l’action | Zone Action | Portrait 2:3 | SVG interactif | Glyphe ✦ et halo CSS |
+| Décor jour/nuit | Mettre en scène le test | Fond du laboratoire | Paysage 16:9 | Décor raster WebP | Dégradés et silhouette CSS |
+| Flux de données | Montrer donnée et commande | Entre les trois zones | Paysage 4:1 | SVG interactif | Flèches et lueurs CSS |
+| Animation du fragment 9 | Révéler le chiffre sur la paroi | Château éclairé | Portrait 2:3 | SVG animé par CSS | Texte et faisceau CSS |

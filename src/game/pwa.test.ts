@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 describe('ressources hors ligne', () => {
@@ -20,7 +20,7 @@ describe('ressources hors ligne', () => {
   });
 
   it('ne charge aucune ressource distante dans l’application', () => {
-    const runtimeFiles = ['index.html', 'src/App.tsx', 'src/styles.css', 'src/data/missions.ts', 'public/sw.js', 'public/manifest.webmanifest'];
+    const runtimeFiles = ['index.html', ...readdirSync('src', { recursive: true, encoding: 'utf8' }).filter((file) => /\.(ts|tsx|css)$/.test(file)).map((file) => `src/${file}`), 'public/sw.js', 'public/manifest.webmanifest'];
     for (const file of runtimeFiles) {
       const source = readFileSync(file, 'utf8');
       expect(source, file).not.toMatch(/https?:\/\//);
