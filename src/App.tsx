@@ -3,6 +3,8 @@ import { ambiguousObservation, balancedTraining, biasedTraining, classify, clear
 import { clearProgress, initialProgress, isFinaleUnlocked, loadProgress, saveProgress, startMission, validateFragment, type Progress } from './game/progress';
 import { finalCode, getMission, levels, missions, type Level, type Mission } from './data/missions';
 import { ComponentMission } from './missions/components/ComponentMission';
+import { ProgramMission } from './missions/program/ProgramMission';
+import { MemoryMission } from './missions/memory/MemoryMission';
 
 type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale' | 'victory';
 
@@ -277,6 +279,8 @@ export default function App() {
   else if (screen === 'level') content = <LevelChoice onChoose={chooseLevel} onBack={() => setScreen('welcome')} />;
   else if (screen === 'map') content = <MissionMap progress={progress} onOpen={openMission} onFinale={() => setScreen('finale')} onLevel={() => setScreen('level')} />;
   else if (screen === 'mission' && activeMission?.id === 'components') content = <ComponentMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
+  else if (screen === 'mission' && activeMission?.id === 'program') content = <ProgramMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
+  else if (screen === 'mission' && activeMission?.id === 'memory') content = <MemoryMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission) content = <MissionScreen key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} />;
   else content = <Victory onNewTeam={newTeam} />;

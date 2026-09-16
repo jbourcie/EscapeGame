@@ -11,6 +11,7 @@ export type Progress = {
   attempts: Record<string, number>;
   hints: Record<string, number>;
   digitalPlacements: Record<string, Record<string, string>>;
+  programBlocks: string[];
   aiSimulationDone: boolean;
 };
 
@@ -22,6 +23,7 @@ export const initialProgress = (): Progress => ({
   attempts: {},
   hints: {},
   digitalPlacements: {},
+  programBlocks: [],
   aiSimulationDone: false,
 });
 
@@ -57,6 +59,7 @@ export function sanitizeProgress(value: unknown): Progress {
     attempts: numberRecord(raw.attempts),
     hints: numberRecord(raw.hints),
     digitalPlacements,
+    programBlocks: Array.isArray(raw.programBlocks) ? raw.programBlocks.filter((id): id is string => typeof id === 'string') : [],
     aiSimulationDone: raw.aiSimulationDone === true,
   };
 }

@@ -52,7 +52,7 @@ describe('finale', () => {
 describe('persistance locale', () => {
   it('restaure une progression enregistrée', () => {
     const storage = memoryStorage();
-    const progress = { ...initialProgress(), level: 'scientist' as const, completed: ['program'], fragments: { program: '7' } };
+    const progress = { ...initialProgress(), level: 'scientist' as const, completed: ['program'], fragments: { program: '7' }, programBlocks: ['repeat-a', 'right', 'repeat-b'] };
     saveProgress(progress, storage);
     expect(loadProgress(storage)).toMatchObject(progress);
   });

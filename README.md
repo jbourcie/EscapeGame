@@ -1,6 +1,6 @@
 # Le dernier calcul d’Antoine d’Abbadie
 
-Prototype fonctionnel d’un mini escape game pédagogique pour tablette. La mission « Composants » est désormais entièrement numérique et tactile ; les cinq autres missions conservent provisoirement leur fonctionnement hybride avec matériel physique. L’application n’utilise ni compte, ni backend, ni API distante.
+Prototype fonctionnel d’un mini escape game pédagogique pour tablette. Les missions « Composants », « Programme » et « Mémoire » sont entièrement numériques et tactiles ; les trois autres missions conservent provisoirement leur fonctionnement hybride avec matériel physique. L’application n’utilise ni compte, ni backend, ni API distante.
 
 ## Prérequis et lancement
 
@@ -54,6 +54,8 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 - `src/game/` : progression persistante et classifieur IA déterministe.
 - `src/game/interactions/` : moteur, hook et composants tactiles réutilisables.
 - `src/missions/components/` : mini-jeu numérique de la mission Composants.
+- `src/missions/program/` : grille, blocs et moteur déterministe de la mission Programme.
+- `src/missions/memory/` : cartes et classification RAM/stockage de la mission Mémoire.
 - `src/assets/game/` : structure des futurs objets, décors et éléments d’interface locaux.
 - `docs/physical-kit.md` : matériel physique des six missions.
 - `docs/future-assets.md` : courte liste des visuels à produire ensuite.
@@ -62,4 +64,4 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 
 ## Limites volontaires de cette itération
 
-Les illustrations de la première mission sont des formes CSS temporaires. Les cinq autres missions attendent encore leur migration numérique et les assets définitifs ne sont pas produits. La simulation IA est un classifieur pédagogique local par proximité numérique, pas une IA distante.
+Les illustrations des trois missions numériques sont des formes CSS temporaires. Les trois autres missions attendent encore leur migration numérique et les assets définitifs ne sont pas produits. La simulation IA est un classifieur pédagogique local par proximité numérique, pas une IA distante.
