@@ -69,4 +69,11 @@ describe('persistance locale', () => {
     clearProgress(storage);
     expect(loadProgress(storage)).toEqual(initialProgress());
   });
+
+  it('préserve une phase IA cohérente et rejette les identifiants étrangers', () => {
+    const storage = memoryStorage();
+    const progress = { ...initialProgress(), aiMission: { phase: 2 as const, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b', 'inconnu'], placements: { o1: 'signal' as const, faux: 'parasite' as const }, balancedDone: false, biasedDone: false } };
+    saveProgress(progress, storage);
+    expect(loadProgress(storage).aiMission).toMatchObject({ phase: 2, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b'], placements: { o1: 'signal' } });
+  });
 });

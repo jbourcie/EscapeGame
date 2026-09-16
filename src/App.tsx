@@ -7,6 +7,7 @@ import { ProgramMission } from './missions/program/ProgramMission';
 import { MemoryMission } from './missions/memory/MemoryMission';
 import { DataMission } from './missions/data/DataMission';
 import { EverywhereMission } from './missions/everywhere/EverywhereMission';
+import { AIMission } from './missions/ai/AIMission';
 
 type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale' | 'victory';
 
@@ -98,7 +99,7 @@ function MissionMap({ progress, onOpen, onFinale, onLevel }: { progress: Progres
         <div><p className="eyebrow">Carte de la machine</p><h1>Quel module allez-vous réparer ?</h1></div>
         <button className="level-pill" onClick={onLevel} aria-label="Changer de niveau">{level?.symbol} {level?.name} · changer</button>
       </div>
-      <p className="lead lead--small">Choisissez librement. Les cinq premiers modules se jouent à l’écran ; l’activité IA conserve encore son parcours hybride.</p>
+      <p className="lead lead--small">Choisissez librement. Les six modules se jouent entièrement à l’écran, à votre rythme.</p>
       <div className="mission-grid">
         {missions.map((mission) => {
           const completed = progress.completed.includes(mission.id);
@@ -285,6 +286,7 @@ export default function App() {
   else if (screen === 'mission' && activeMission?.id === 'memory') content = <MemoryMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission?.id === 'data') content = <DataMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission?.id === 'everywhere') content = <EverywhereMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
+  else if (screen === 'mission' && activeMission?.id === 'ai') content = <AIMission key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'mission' && activeMission) content = <MissionScreen key={activeMission.id} mission={activeMission} progress={progress} onProgress={setProgress} onBack={() => setScreen('map')} />;
   else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} />;
   else content = <Victory onNewTeam={newTeam} />;

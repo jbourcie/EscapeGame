@@ -61,3 +61,18 @@ Les objets interactifs définitifs doivent être livrés en SVG optimisé. Les d
 | Décor jour/nuit | Mettre en scène le test | Fond du laboratoire | Paysage 16:9 | Décor raster WebP | Dégradés et silhouette CSS |
 | Flux de données | Montrer donnée et commande | Entre les trois zones | Paysage 4:1 | SVG interactif | Flèches et lueurs CSS |
 | Animation du fragment 9 | Révéler le chiffre sur la paroi | Château éclairé | Portrait 2:3 | SVG animé par CSS | Texte et faisceau CSS |
+
+## Mission Intelligence artificielle
+
+| Asset | Rôle | Emplacement prévu | Proportion | Format conseillé | Temporaire actuel |
+| --- | --- | --- | --- | --- | --- |
+| Fond d’observatoire IA | Situer le laboratoire scientifique | Arrière-plan du graphique | Paysage 4:3 | Image de décor WebP | Dégradé CSS |
+| Graphique céleste | Positionner luminosité et régularité | Plateau central | Carré 1:1 | SVG interactif avec axes HTML | Grille CSS et boutons HTML |
+| Signal | Exemple de classe signal | Points et cartes | Carré 1:1 | SVG interactif sans texte | Glyphe ★ et CSS |
+| Parasite | Exemple de classe parasite | Points et cartes | Carré 1:1 | SVG interactif sans texte | Glyphe ◆ et CSS |
+| Observation inconnue | Distinguer le cas à classer | Point mobile du graphique | Carré 1:1 | SVG interactif sans texte | Glyphe ◎ et pulsation CSS |
+| Lignes de distance | Expliquer les voisins sélectionnés | Calque du graphique | Ligne variable | SVG interactif | Traits CSS calculés |
+| Vote des voisins | Montrer les trois votes | Panneau latéral | Paysage 3:1 | SVG interactif et texte HTML | Liste et symboles HTML |
+| Indicateur d’équilibre des données | Comparer les proportions | Panneau expérience | Paysage 4:1 | SVG interactif | Compteurs ★ et ◆ en HTML |
+| Levier de modification du jeu d’apprentissage | Déclencher le changement de données | Panneau expérience | Paysage 3:1 | SVG interactif | Bouton HTML |
+| Animation du fragment 6 | Relier les observations au chiffre | Conclusion | Carré 1:1 | SVG animé par CSS | Cartes O1–O4 et chiffre HTML/CSS |

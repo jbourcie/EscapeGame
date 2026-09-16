@@ -5,7 +5,7 @@
 1. L'équipe découvre la machine arrêtée et lance la mission.
 2. Elle choisit un niveau : Explorateur (6–8 ans), Scientifique (9–11 ans) ou Expert (12+).
 3. Elle choisit librement l'un des six modules sur la carte.
-4. Pour les cinq premiers modules, elle joue directement à l’écran et le fragment est enregistré automatiquement ; seule la mission IA utilise encore le matériel physique et une saisie du chiffre apparu.
+4. Pour les six modules, elle joue directement à l’écran et chaque fragment est enregistré automatiquement.
 5. Une réussite conserve le fragment, affiche l'idée pédagogique, puis ramène à la carte.
 6. Après les six réussites, l'équipe saisit les fragments dans l'ordre imposé et redémarre la machine.
 7. L'écran de victoire récapitule les notions et permet d'effacer la partie pour une nouvelle équipe.
@@ -15,8 +15,8 @@
 - **Accueil** : titre, machine scientifique arrêtée, introduction et bouton de départ.
 - **Choix du niveau** : trois cartes avec âge, ton et quantité d'aide annoncés.
 - **Carte des missions** : six modules, état textuel et visuel, progression, accès libre et finale verrouillée/déverrouillée.
-- **Mission** : mini-jeu tactile pour Composants, Programme, Mémoire, Données et Informatique partout ; parcours hybride pour la mission IA.
-- **Activité IA** : après la validation du module 6, classifieur local à exemples, cas clair puis cas ambigu/données déséquilibrées.
+- **Mission** : mini-jeu tactile pour les six modules, y compris l’IA.
+- **Activité IA** : découverte des exemples, classement de quatre observations, puis comparaison de jeux équilibré et déséquilibré avant le fragment 6.
 - **Finale** : rappel ordonné des six fragments, saisie du code, redémarrage animé, victoire et nouvelle équipe.
 
 ## États du jeu
@@ -24,7 +24,7 @@
 - `welcome`, `level`, `map`, `mission`, `finale`, `victory` pour la navigation.
 - Niveau choisi : `explorer`, `scientist` ou `expert`.
 - Par mission : `not-started`, `in-progress`, `completed`.
-- Progression persistée : identifiant du niveau, missions validées, fragments, tentatives, nombre d'indices révélés et activité IA terminée.
+- Progression persistée : identifiant du niveau, missions validées, fragments, tentatives, indices et état détaillé de la mission IA.
 - État transitoire non persisté : saisies, messages de formulaire et animation de réussite.
 
 ## Six missions
@@ -117,9 +117,9 @@ Le socle partagé sépare :
 3. **Mémoire — cette itération** : tri tactile de cartes entre RAM et stockage, feedback par niveau et fragment 2 automatique.
 4. **Données — cette itération** : interrupteurs-étoiles, calcul binaire local et fragment 5 automatique.
 5. **Informatique partout — cette itération** : chaîne capteur-programme-action testable et fragment 9 automatique.
-6. **Intelligence artificielle** : classement tactile des observations, relié à la simulation locale existante.
+6. **Intelligence artificielle — cette itération** : classement tactile des observations et expériences de voisinage locales, fragment 6 automatique.
 
-La migration reste progressive. Tant qu’une mission n’est pas migrée, son parcours hybride et sa validation manuelle restent intacts.
+La migration numérique des six missions est achevée. Les visuels définitifs restent à produire.
 
 ### Architecture des assets
 

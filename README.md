@@ -1,6 +1,6 @@
 # Le dernier calcul d’Antoine d’Abbadie
 
-Prototype fonctionnel d’un mini escape game pédagogique pour tablette. Les cinq premières missions sont entièrement numériques et tactiles ; seule la mission « Intelligence artificielle » conserve provisoirement son fonctionnement hybride. L’application n’utilise ni compte, ni backend, ni API distante.
+Prototype fonctionnel d’un mini escape game pédagogique pour tablette. Les six missions sont entièrement numériques et tactiles. L’application n’utilise ni compte, ni backend, ni API distante.
 
 ## Prérequis et lancement
 
@@ -47,6 +47,8 @@ Le service worker pré-cache la coque de l’application puis conserve les fichi
 
 Le niveau, les missions commencées et validées, les fragments, tentatives et indices sont conservés dans `localStorage`, uniquement sur l’appareil. « Recommencer » demande confirmation ; « Nouvelle équipe » sur la victoire efface immédiatement la progression.
 
+La mission IA conserve aussi la phase, les exemples consultés, les observations classées et les deux expériences. Son bouton « Réinitialiser la mission IA » ne touche pas aux cinq autres fragments. Le fragment 6 apparaît et s’enregistre après la conclusion des trois phases.
+
 ## Organisation
 
 - `PLAN.md` : parcours, règles et stratégie de vérification.
@@ -58,6 +60,7 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 - `src/missions/memory/` : cartes et classification RAM/stockage de la mission Mémoire.
 - `src/missions/data/` : pupitre astronomique et conversion binaire de la mission Données.
 - `src/missions/everywhere/` : construction et simulation d’une chaîne informatique embarquée.
+- `src/missions/ai/` : graphique, classement et expérience locale de classification.
 - `src/assets/game/` : structure des futurs objets, décors et éléments d’interface locaux.
 - `docs/physical-kit.md` : matériel physique des six missions.
 - `docs/future-assets.md` : courte liste des visuels à produire ensuite.
@@ -66,4 +69,4 @@ Le niveau, les missions commencées et validées, les fragments, tentatives et i
 
 ## Limites volontaires de cette itération
 
-Les illustrations des cinq missions numériques sont des formes CSS temporaires. La mission IA attend encore sa migration numérique et les assets définitifs ne sont pas produits. Sa simulation actuelle est un classifieur pédagogique local par proximité numérique, pas une IA distante.
+Les illustrations des six missions numériques sont des formes CSS temporaires ; les assets définitifs ne sont pas produits. La mission IA emploie un classifieur pédagogique local à trois voisins, pas une IA distante. L’indice de vote affiché n’est pas une probabilité scientifique.

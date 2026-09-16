@@ -1,7 +1,17 @@
 import type { Level } from '../data/missions';
 import { missions } from '../data/missions';
+import { balancedTraining, classify, newObservations, type ObservationClass } from './classifier';
 
 export const STORAGE_KEY = 'abbadie-progress-v1';
+
+export type AIMissionProgress = {
+  phase: 1 | 2 | 3;
+  consulted: string[];
+  placements: Record<string, ObservationClass>;
+  balancedDone: boolean;
+  biasedDone: boolean;
+};
+export const initialAIMission = (): AIMissionProgress => ({ phase: 1, consulted: [], placements: {}, balancedDone: false, biasedDone: false });
 
 export type Progress = {
   level: Level | null;
@@ -14,6 +24,7 @@ export type Progress = {
   programBlocks: string[];
   binaryBits: number[];
   aiSimulationDone: boolean;
+  aiMission: AIMissionProgress;
 };
 
 export const initialProgress = (): Progress => ({
@@ -27,6 +38,7 @@ export const initialProgress = (): Progress => ({
   programBlocks: [],
   binaryBits: [0, 0, 0, 0],
   aiSimulationDone: false,
+  aiMission: initialAIMission(),
 });
 
 const knownIds = new Set(missions.map(({ id }) => id));
@@ -53,6 +65,13 @@ export function sanitizeProgress(value: unknown): Progress {
           .filter(([itemId, targetId]) => Boolean(itemId) && typeof targetId === 'string'),
       ) as Record<string, string>]),
   ) as Record<string, Record<string, string>>;
+  const aiRaw = raw.aiMission && typeof raw.aiMission === 'object' ? raw.aiMission : initialAIMission();
+  const exampleIds = new Set(balancedTraining.map((item) => item.id));
+  const observationIds = new Set(newObservations.map((item) => item.id));
+  const consulted = Array.isArray(aiRaw.consulted) ? [...new Set(aiRaw.consulted.filter((id): id is string => typeof id === 'string' && exampleIds.has(id)))] : [];
+  const placements = Object.fromEntries(Object.entries(aiRaw.placements && typeof aiRaw.placements === 'object' ? aiRaw.placements : {})
+    .filter(([id, label]) => observationIds.has(id) && newObservations.some((item) => item.id === id && classify(item, balancedTraining) === label))) as Record<string, ObservationClass>;
+  const phase = aiRaw.phase === 3 && consulted.length === 4 && Object.keys(placements).length === 4 ? 3 : (aiRaw.phase === 2 || aiRaw.phase === 3) && consulted.length === 4 ? 2 : 1;
   return {
     level,
     started: [...new Set(stringList(raw.started))],
@@ -66,6 +85,7 @@ export function sanitizeProgress(value: unknown): Progress {
       ? raw.binaryBits.map((bit) => bit === 1 ? 1 : 0)
       : empty.binaryBits,
     aiSimulationDone: raw.aiSimulationDone === true,
+    aiMission: { phase, consulted, placements, balancedDone: phase === 3 && aiRaw.balancedDone === true, biasedDone: phase === 3 && aiRaw.balancedDone === true && aiRaw.biasedDone === true },
   };
 }
 
