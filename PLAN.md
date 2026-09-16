@@ -16,7 +16,7 @@
 - **Choix du niveau** : trois cartes avec âge, ton et quantité d'aide annoncés.
 - **Carte des missions** : six modules, état textuel et visuel, progression, accès libre et finale verrouillée/déverrouillée.
 - **Mission** : mini-jeu tactile pour les six modules, y compris l’IA.
-- **Activité IA** : découverte des exemples, classement de quatre observations, puis comparaison de jeux équilibré et déséquilibré avant le fragment 6.
+- **Activité IA** : quatre étapes guidées — observer deux exemples, suivre une comparaison pas à pas, classer quatre observations une par une, comparer deux jeux d’apprentissage avant le fragment 6.
 - **Finale** : rappel ordonné des six fragments, saisie du code, redémarrage animé, victoire et nouvelle équipe.
 
 ## États du jeu
@@ -41,7 +41,7 @@
 ## Règles de validation
 
 - Les réponses, contenus et indices sont centralisés dans `src/data/missions.ts`.
-- L'application demande un seul chiffre mais ne le révèle jamais avant validation physique.
+- Les six fragments sont révélés et enregistrés automatiquement après réussite numérique de chaque mission ; aucune saisie physique n’est requise pour l’IA.
 - Première erreur : message générique de nouvelle vérification.
 - Deuxième erreur : premier indice automatiquement visible.
 - Troisième erreur et suivantes : indice plus précis, sans chiffre ni solution.
@@ -118,6 +118,8 @@ Le socle partagé sépare :
 4. **Données — cette itération** : interrupteurs-étoiles, calcul binaire local et fragment 5 automatique.
 5. **Informatique partout — cette itération** : chaîne capteur-programme-action testable et fragment 9 automatique.
 6. **Intelligence artificielle — cette itération** : classement tactile des observations et expériences de voisinage locales, fragment 6 automatique.
+
+Pour l’IA, chaque étape ne présente qu’une consigne. La démonstration avance sur action de l’enfant ; la question de compréhension ne pénalise pas une mauvaise réponse. Les quatre cartes rejoignent successivement les exemples connus. La comparaison finale emploie la même observation et le même classifieur avec deux jeux de données différents. La progression détaillée et les coups de pouce contextuels sont locaux et persistants.
 
 La migration numérique des six missions est achevée. Les visuels définitifs restent à produire.
 

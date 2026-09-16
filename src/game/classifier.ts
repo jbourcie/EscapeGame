@@ -1,7 +1,7 @@
 export type ObservationClass = 'signal' | 'parasite';
 export type Observation = { id: string; name: string; brightness: number; regularity: number; label?: ObservationClass };
 export type NeighborResult = { observation: Observation & { label: ObservationClass }; distance: number };
-export type ClassificationResult = { predictedClass: ObservationClass; neighbors: NeighborResult[]; votes: Record<ObservationClass, number> };
+export type ClassificationResult = { predictedClass: ObservationClass; neighbors: NeighborResult[]; votes: Record<ObservationClass, number>; tieRule: 'parasite'; tieApplied: boolean };
 
 export const balancedTraining: Observation[] = [
   { id: 'signal-a', name: 'Signal A', brightness: 8, regularity: 9, label: 'signal' },
@@ -41,7 +41,7 @@ export function classifyDetailed(observation: Observation, training: readonly Ob
     count[neighbor.observation.label] += 1;
     return count;
   }, { signal: 0, parasite: 0 });
-  return { predictedClass: votes.signal > votes.parasite ? 'signal' : 'parasite', neighbors, votes };
+  return { predictedClass: votes.signal > votes.parasite ? 'signal' : 'parasite', neighbors, votes, tieRule: 'parasite', tieApplied: votes.signal === votes.parasite };
 }
 
 export function classify(observation: Observation, training: readonly Observation[], k = 3): ObservationClass {

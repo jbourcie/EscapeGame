@@ -1,8 +1,14 @@
-const CACHE = 'abbadie-v5';
+const CACHE = 'abbadie-v6';
 const CORE = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    fetch('/index.html')
+      .then((response) => response.text())
+      .then((html) => [...html.matchAll(/(?:src|href)="(\/assets\/[^\"]+)"/g)].map((match) => match[1]))
+      .then((assets) => caches.open(CACHE).then((cache) => cache.addAll([...CORE, ...assets])))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 self.addEventListener('activate', (event) => {

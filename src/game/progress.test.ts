@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { missions } from '../data/missions';
-import { clearProgress, initialProgress, isFinaleUnlocked, loadProgress, saveProgress, STORAGE_KEY, validateFragment } from './progress';
+import { clearProgress, initialAIMission, initialProgress, isFinaleUnlocked, loadProgress, sanitizeProgress, saveProgress, STORAGE_KEY, validateFragment } from './progress';
 
 function memoryStorage() {
   const values = new Map<string, string>();
@@ -72,8 +72,24 @@ describe('persistance locale', () => {
 
   it('préserve une phase IA cohérente et rejette les identifiants étrangers', () => {
     const storage = memoryStorage();
-    const progress = { ...initialProgress(), aiMission: { phase: 2 as const, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b', 'inconnu'], placements: { o1: 'signal' as const, faux: 'parasite' as const }, balancedDone: false, biasedDone: false } };
+    const progress = { ...initialProgress(), aiMission: { ...initialAIMission(), phase: 2 as const, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b', 'inconnu'], placements: { o1: 'signal' as const, faux: 'parasite' as const } } };
     saveProgress(progress, storage);
     expect(loadProgress(storage).aiMission).toMatchObject({ phase: 2, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b'], placements: { o1: 'signal' } });
+  });
+
+  it('refuse une étape IA future sans les prérequis pédagogiques', () => {
+    const saved = { ...initialProgress(), aiMission: { ...initialAIMission(), phase: 4, comparisonStep: 3, biasedDone: true } };
+    expect(sanitizeProgress(saved).aiMission.phase).toBe(1);
+    expect(sanitizeProgress(saved).aiMission.biasedDone).toBe(false);
+  });
+
+  it('migre une sauvegarde de l’ancien parcours IA sans supprimer les autres fragments', () => {
+    const old = { ...initialProgress(), fragments: { components: '4' }, aiMission: { phase: 2, consulted: ['signal-a', 'signal-b', 'parasite-a', 'parasite-b'], placements: { o1: 'signal' }, balancedDone: false, biasedDone: false } };
+    const restored = sanitizeProgress(old);
+    expect(restored.aiMission.version).toBe(2);
+    expect(restored.aiMission.phase).toBe(2);
+    expect(restored.aiMission.demoStep).toBe(0);
+    expect(restored.aiMission.placements.o1).toBe('signal');
+    expect(restored.fragments.components).toBe('4');
   });
 });

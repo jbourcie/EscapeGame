@@ -25,6 +25,8 @@ describe('classification pédagogique locale', () => {
     expect(result.neighbors[0].distance).toBe(1);
     expect(result.votes).toEqual({ signal: 2, parasite: 2 });
     expect(result.predictedClass).toBe('parasite'); // égalité prudente
+    expect(result.tieRule).toBe('parasite');
+    expect(result.tieApplied).toBe(true);
     expect(JSON.stringify(balancedTraining)).toBe(snapshot);
   });
 
@@ -41,6 +43,7 @@ describe('classification pédagogique locale', () => {
   it('classe les quatre observations avec le même moteur et montre le changement de vote', () => {
     expect(newObservations.map((item) => classify(item, balancedTraining))).toEqual(['signal', 'signal', 'parasite', 'parasite']);
     expect(classifyDetailed(clearObservation, balancedTraining).votes).toEqual({ signal: 2, parasite: 1 });
+    expect(classifyDetailed(clearObservation, balancedTraining).tieApplied).toBe(false);
     expect(classifyDetailed(ambiguousObservation, biasedTraining).votes).toEqual({ signal: 1, parasite: 2 });
   });
 });

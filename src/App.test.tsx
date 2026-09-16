@@ -48,15 +48,22 @@ async function solveEverywhere(user: ReturnType<typeof userEvent.setup>) {
 }
 
 async function solveAI(user: ReturnType<typeof userEvent.setup>) {
-  for (const name of ['Signal A', 'Signal B', 'Parasite A', 'Parasite B']) await user.click(screen.getByRole('button', { name: new RegExp(`${name}.*voir`, 'i') }));
-  await user.click(screen.getByRole('button', { name: /La machine a observé les exemples/i }));
+  await user.click(screen.getByRole('button', { name: /Signal intéressant.*Toucher pour observer/i }));
+  await user.click(screen.getByRole('button', { name: /Parasite.*Toucher pour observer/i }));
+  await user.click(screen.getByRole('button', { name: /J’ai compris les exemples/i }));
+  await user.click(screen.getByRole('button', { name: /Voir la comparaison/i }));
+  for (let step = 0; step < 5; step++) await user.click(screen.getByRole('button', { name: /Continuer/i }));
+  await user.click(screen.getByRole('button', { name: /Sur les exemples les plus proches/i }));
+  await user.click(screen.getByRole('button', { name: /Je peux entraîner la machine/i }));
   for (const [id, family] of [['O1','signal'],['O2','signal'],['O3','parasite'],['O4','parasite']]) {
     await user.click(screen.getByRole('button', { name: new RegExp(`${id}.*Luminosité`, 'i') }));
     await user.click(screen.getByRole('button', { name: new RegExp(`Famille ${family}.*déposer`, 'i') }));
+    await user.click(screen.getByRole('button', { name: /Voir l’observation suivante|Découvrir si l’IA peut se tromper/i }));
   }
-  await user.click(screen.getByRole('button', { name: /Analyser le jeu équilibré/i }));
-  await user.click(screen.getByRole('button', { name: /Ajouter beaucoup d’exemples parasites/i }));
-  await user.click(screen.getByRole('button', { name: /Conclure l’enquête/i }));
+  await user.click(screen.getByRole('button', { name: /^IA bien entraînée$/i }));
+  await user.click(screen.getByRole('button', { name: /Tester l’IA bien entraînée/i }));
+  await user.click(screen.getByRole('button', { name: /Tester l’IA mal entraînée/i }));
+  await user.click(screen.getByRole('button', { name: /révéler le fragment/i }));
 }
 
 beforeEach(() => {

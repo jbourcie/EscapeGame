@@ -1,4 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { runInNewContext } from 'node:vm';
 import { describe, expect, it } from 'vitest';
 
 describe('ressources hors ligne', () => {
@@ -25,5 +26,37 @@ describe('ressources hors ligne', () => {
       const source = readFileSync(file, 'utf8');
       expect(source, file).not.toMatch(/https?:\/\//);
     }
+  });
+
+  it('met en cache les scripts et styles du build dès la première installation', async () => {
+    const listeners = new Map<string, (event: { waitUntil: (promise: Promise<unknown>) => void }) => void>();
+    const added: string[] = [];
+    const html = '<link href="/assets/index-test.css" rel="stylesheet"><script src="/assets/index-test.js"></script>';
+    runInNewContext(readFileSync('public/sw.js', 'utf8'), {
+      self: { addEventListener: (name: string, listener: (event: { waitUntil: (promise: Promise<unknown>) => void }) => void) => listeners.set(name, listener), skipWaiting: () => Promise.resolve() },
+      fetch: async () => ({ text: async () => html }),
+      caches: { open: async () => ({ addAll: async (paths: string[]) => { added.push(...paths); } }) },
+    });
+    let installation: Promise<unknown> = Promise.resolve();
+    listeners.get('install')!({ waitUntil: (promise) => { installation = promise; } });
+    await installation;
+    expect(added).toContain('/index.html');
+    expect(added).toContain('/assets/index-test.css');
+    expect(added).toContain('/assets/index-test.js');
+  });
+
+  it('sert la page locale mise en cache lors d’une navigation hors ligne', async () => {
+    const listeners = new Map<string, (event: { request: { method: string; url: string; mode: string }; respondWith: (promise: Promise<unknown>) => void }) => void>();
+    const fallback = { offline: true };
+    const localOrigin = ['https:', '', 'local.test'].join('/');
+    runInNewContext(readFileSync('public/sw.js', 'utf8'), {
+      self: { location: { origin: localOrigin }, addEventListener: (name: string, listener: (event: { request: { method: string; url: string; mode: string }; respondWith: (promise: Promise<unknown>) => void }) => void) => listeners.set(name, listener) },
+      URL,
+      fetch: async () => { throw new Error('hors ligne'); },
+      caches: { match: async (request: string | { url: string }) => request === '/index.html' ? fallback : undefined },
+    });
+    let response: Promise<unknown> = Promise.resolve();
+    listeners.get('fetch')!({ request: { method: 'GET', url: `${localOrigin}/mission`, mode: 'navigate' }, respondWith: (promise) => { response = promise; } });
+    await expect(response).resolves.toBe(fallback);
   });
 });

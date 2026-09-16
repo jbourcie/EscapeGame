@@ -22,7 +22,7 @@ npm run build
 npm run preview
 ```
 
-Le build autonome est produit dans `dist/`. Les réponses et tous les textes des missions sont centralisés dans `src/data/missions.ts`. Le code final configurable est dérivé de l’ordre de ces missions.
+Le build autonome est produit dans `dist/`. Les réponses et fragments sont centralisés dans `src/data/missions.ts` ; les textes guidés par âge de l’IA sont dans `src/missions/ai/copy.ts`. Le code final configurable est dérivé de l’ordre des missions.
 
 ## Installation sur tablette
 
@@ -41,13 +41,13 @@ L’icône et le manifeste sont inclus localement. Une fois installée, l’appl
 4. Activer le mode hors ligne, puis recharger la page.
 5. Parcourir les missions, valider les fragments et ouvrir la finale.
 
-Le service worker pré-cache la coque de l’application puis conserve les fichiers JavaScript et CSS demandés lors du premier chargement. Les navigations hors ligne reviennent vers la page principale.
+Le service worker pré-cache la coque ainsi que les fichiers JavaScript et CSS du build dès son installation. Les navigations hors ligne reviennent vers la page principale.
 
 ## Progression locale
 
 Le niveau, les missions commencées et validées, les fragments, tentatives et indices sont conservés dans `localStorage`, uniquement sur l’appareil. « Recommencer » demande confirmation ; « Nouvelle équipe » sur la victoire efface immédiatement la progression.
 
-La mission IA conserve aussi la phase, les exemples consultés, les observations classées et les deux expériences. Son bouton « Réinitialiser la mission IA » ne touche pas aux cinq autres fragments. Le fragment 6 apparaît et s’enregistre après la conclusion des trois phases.
+La mission IA conserve aussi l’étape guidée, les exemples consultés, la démonstration, les observations classées, l’aide utilisée et la comparaison des deux jeux de données. Une ancienne sauvegarde IA est reprise à une étape sûre sans perdre les autres fragments. Son bouton « Réinitialiser la mission IA » ne touche pas aux cinq autres fragments. Le fragment 6 apparaît et s’enregistre après les quatre étapes.
 
 ## Organisation
 
@@ -60,7 +60,7 @@ La mission IA conserve aussi la phase, les exemples consultés, les observations
 - `src/missions/memory/` : cartes et classification RAM/stockage de la mission Mémoire.
 - `src/missions/data/` : pupitre astronomique et conversion binaire de la mission Données.
 - `src/missions/everywhere/` : construction et simulation d’une chaîne informatique embarquée.
-- `src/missions/ai/` : graphique, classement et expérience locale de classification.
+- `src/missions/ai/` : textes adaptés à l’âge, graphique, démonstration, classement et comparaison guidée.
 - `src/assets/game/` : structure des futurs objets, décors et éléments d’interface locaux.
 - `docs/physical-kit.md` : matériel physique des six missions.
 - `docs/future-assets.md` : courte liste des visuels à produire ensuite.
@@ -69,4 +69,4 @@ La mission IA conserve aussi la phase, les exemples consultés, les observations
 
 ## Limites volontaires de cette itération
 
-Les illustrations des six missions numériques sont des formes CSS temporaires ; les assets définitifs ne sont pas produits. La mission IA emploie un classifieur pédagogique local à trois voisins, pas une IA distante. L’indice de vote affiché n’est pas une probabilité scientifique.
+Les illustrations des six missions numériques sont des formes CSS temporaires ; les assets définitifs ne sont pas produits. La mission IA emploie un classifieur pédagogique local à trois voisins, pas une IA distante. Le vote affiché est une prédiction et non une probabilité ou une certitude.

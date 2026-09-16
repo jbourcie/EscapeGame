@@ -5,13 +5,19 @@ import { balancedTraining, classify, newObservations, type ObservationClass } fr
 export const STORAGE_KEY = 'abbadie-progress-v1';
 
 export type AIMissionProgress = {
-  phase: 1 | 2 | 3;
+  version: 2;
+  phase: 1 | 2 | 3 | 4;
   consulted: string[];
+  demoStep: number;
+  demoAnswerCorrect: boolean;
   placements: Record<string, ObservationClass>;
+  reviewItemId: string | null;
+  comparisonStep: number;
+  helpCounts: [number, number, number, number];
   balancedDone: boolean;
   biasedDone: boolean;
 };
-export const initialAIMission = (): AIMissionProgress => ({ phase: 1, consulted: [], placements: {}, balancedDone: false, biasedDone: false });
+export const initialAIMission = (): AIMissionProgress => ({ version: 2, phase: 1, consulted: [], demoStep: 0, demoAnswerCorrect: false, placements: {}, reviewItemId: null, comparisonStep: 0, helpCounts: [0, 0, 0, 0], balancedDone: false, biasedDone: false });
 
 export type Progress = {
   level: Level | null;
@@ -71,7 +77,15 @@ export function sanitizeProgress(value: unknown): Progress {
   const consulted = Array.isArray(aiRaw.consulted) ? [...new Set(aiRaw.consulted.filter((id): id is string => typeof id === 'string' && exampleIds.has(id)))] : [];
   const placements = Object.fromEntries(Object.entries(aiRaw.placements && typeof aiRaw.placements === 'object' ? aiRaw.placements : {})
     .filter(([id, label]) => observationIds.has(id) && newObservations.some((item) => item.id === id && classify(item, balancedTraining) === label))) as Record<string, ObservationClass>;
-  const phase = aiRaw.phase === 3 && consulted.length === 4 && Object.keys(placements).length === 4 ? 3 : (aiRaw.phase === 2 || aiRaw.phase === 3) && consulted.length === 4 ? 2 : 1;
+  const legacy = aiRaw.version !== 2;
+  const requestedPhase = legacy ? aiRaw.phase === 3 ? 4 : aiRaw.phase === 2 ? 2 : 1 : aiRaw.phase;
+  const demoStep = legacy ? 0 : Math.max(0, Math.min(6, Number.isInteger(aiRaw.demoStep) ? aiRaw.demoStep : 0));
+  const demoAnswerCorrect = !legacy && demoStep === 6 && aiRaw.demoAnswerCorrect === true;
+  const canLeaveExamples = consulted.includes('signal-a') && consulted.includes('parasite-a');
+  const phase = !canLeaveExamples ? 1 : requestedPhase === 4 && Object.keys(placements).length === 4 && (legacy || demoAnswerCorrect) ? 4 : requestedPhase === 3 && demoAnswerCorrect ? 3 : (requestedPhase === 2 || requestedPhase === 3 || requestedPhase === 4) ? 2 : 1;
+  const reviewItemId = !legacy && typeof aiRaw.reviewItemId === 'string' && placements[aiRaw.reviewItemId] ? aiRaw.reviewItemId : null;
+  const comparisonStep = phase === 4 && !legacy ? Math.max(0, Math.min(3, Number.isInteger(aiRaw.comparisonStep) ? aiRaw.comparisonStep : 0)) : 0;
+  const helpCounts = Array.isArray(aiRaw.helpCounts) && aiRaw.helpCounts.length === 4 ? aiRaw.helpCounts.map((count) => Number.isInteger(count) ? Math.max(0, Math.min(3, count)) : 0) as [number, number, number, number] : [0, 0, 0, 0] as [number, number, number, number];
   return {
     level,
     started: [...new Set(stringList(raw.started))],
@@ -85,7 +99,7 @@ export function sanitizeProgress(value: unknown): Progress {
       ? raw.binaryBits.map((bit) => bit === 1 ? 1 : 0)
       : empty.binaryBits,
     aiSimulationDone: raw.aiSimulationDone === true,
-    aiMission: { phase, consulted, placements, balancedDone: phase === 3 && aiRaw.balancedDone === true, biasedDone: phase === 3 && aiRaw.balancedDone === true && aiRaw.biasedDone === true },
+    aiMission: { version: 2, phase, consulted, demoStep, demoAnswerCorrect, placements, reviewItemId, comparisonStep, helpCounts, balancedDone: phase === 4 && comparisonStep >= 2, biasedDone: phase === 4 && comparisonStep >= 3 },
   };
 }
 
