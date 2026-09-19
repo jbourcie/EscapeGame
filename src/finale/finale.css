@@ -1,0 +1,189 @@
+/* Finale-only stage: the established laboratory, copper and cyan vocabulary. */
+.screen-finale { height: 100svh; height: 100dvh; min-height: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.screen-finale .topbar { flex: none; min-height: 58px; background: #071723; }
+.screen-finale .topbar__status { color: #becbd0; }
+.screen-finale main { display: flex; padding: 8px max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left)); min-height: 0; }
+.screen-finale footer { flex: none; min-height: 24px; padding: 4px 8px; font-size: 11px; }
+.awakening { width: 100%; max-width: 1180px; margin: 0 auto; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 14px 20px; border: 1px solid #816e51; border-radius: 16px; background: radial-gradient(ellipse at 50% 50%, #20424c, #081b2b 80%); isolation: isolate; }
+.awakening-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex: none; }
+.awakening-heading h1 { margin: 0; font-size: clamp(25px, 3.4vw, 38px); line-height: 1.15; }
+.awakening-heading .eyebrow { font-size: 11px; margin: 0 0 6px; }
+.awakening-tools { display: flex; gap: 8px; }
+.awakening-tools .button { padding: 8px 12px; font-size: 13px; white-space: nowrap; }
+.awakening-guide { display: flex; align-items: center; gap: 12px; min-height: 58px; flex: none; }
+.awakening-guide .guide-character { width: 46px; height: 50px; }
+.awakening-guide p { margin: 0; font-size: 16px; color: var(--aqua); }
+.awakening-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; border-radius: 80px 80px 10px 10px; border: 1px solid #466570; background: radial-gradient(ellipse at center, #294653, #0a1b2a); }
+.awakening--dimming .awakening-stage { animation: lab-dim 2.8s ease both; }
+.awakening-machine { position: absolute; inset: 6% 3% 2%; display: flex; flex-direction: column; justify-content: center; gap: 18px; transition: opacity 1.8s, transform 3s; }
+.awakening .central-machine { margin: 0; min-height: 0; grid-template-columns: minmax(0,1fr) 170px minmax(0,1fr); grid-template-rows: repeat(3,minmax(60px,1fr)); gap: 10px 28px; padding: 24px; background: linear-gradient(90deg,#0a1d2c,#193747,#0a1d2c); }
+.awakening .central-machine .astrolabe { width: 160px; }
+.awakening .central-machine__core { gap: 12px; }
+.awakening .central-machine__core > span { font-size: 16px; }
+.awakening .machine-module { padding: 10px; min-height: 60px; grid-template-columns: 32px 1fr; }
+.awakening .machine-module strong { font-size: 14px; }
+.awakening .machine-module .module-icon { width: 30px; }
+.awakening .module-state { display: none; }
+.awakening .module-number { font-size: 9px; }
+.awakening .machine-module::after { width: 29px; }
+.awakening-sockets { display: grid; grid-template-columns: repeat(6,minmax(0,1fr)); gap: 10px; }
+.awakening-socket { position: relative; display: grid; justify-items: center; align-content: start; min-height: 84px; padding: 6px; border: 1px solid #59676b; border-radius: 20px 20px 6px 6px; background: #0a2030; color: #a4b5bf; }
+.awakening-socket b { font: 32px Georgia,serif; }
+.awakening-socket small { font-size: 11px; text-align: center; line-height: 1.25; }
+.awakening-socket.is-installed { border-color: var(--module-color); color: var(--gold); background: #1c3d47; }
+.awakening-socket.is-installed b { animation: fragment-install .75s ease both; }
+.system-effect { display: none; position: absolute; top: 8px; right: 5px; color: var(--aqua); font-size: 15px; }
+.is-installed .system-effect { display: block; }
+.module-components.is-installed .system-effect { animation: chassis-assemble 1s ease both; }
+.module-program.is-installed .system-effect { animation: mechanism-turn 3s linear infinite; }
+.module-memory.is-installed .system-effect { animation: memory-light 1s ease both; }
+.module-data.is-installed .system-effect { animation: binary-flow 1s ease both; font-size: 10px; }
+.module-everywhere.is-installed .system-effect { animation: instrument-link 1s ease both; }
+.module-ai.is-installed .system-effect { animation: lens-compare 1s ease both; }
+.awakening--ready .astrolabe__lens { animation: core-breathe 3s ease-in-out infinite; }
+.awakening--charging .astrolabe__ring { animation: mechanism-turn 2s linear infinite; }
+.awakening--awakening .astrolabe__ring { animation: mechanism-turn 1.2s linear infinite; }
+.awakening--awakening .astrolabe__lens { animation: core-breathe 2s ease-in-out infinite; }
+.awakening--charging .machine-module::after, .awakening--awakening .machine-module::after { background: linear-gradient(90deg,#447b7e,var(--gold),var(--aqua),#447b7e); background-size: 200% 100%; animation: energy-flow 1.5s linear infinite; height: 4px; }
+.awakening--awakening .central-machine { box-shadow: inset 0 0 0 6px #091c2c, inset 0 0 0 7px #806b4d, 0 0 40px #8ce4d740; }
+.awakening-controls { min-height: 165px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; flex: none; }
+.awakening-controls p { margin: 0; color: var(--muted); font-size: 13px; text-align: center; }
+.activation-control { width: min(100%,400px); min-height: 64px; font-size: 20px; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.activation-control span { margin-left: 14px; }
+.activation-meter { width: min(100%,400px); height: 9px; overflow: hidden; border: 1px solid #708d90; background: #061522; border-radius: 9px; }
+.activation-meter i { display: block; width: 100%; height: 100%; background: linear-gradient(90deg,var(--aqua),var(--gold)); transform-origin: left; transition: transform .5s ease-out; }
+.awakening--charging .activation-meter i { transition-duration: .05s; transition-timing-function: linear; }
+.activation-alternative { color: var(--ink); font-size: 13px; min-height: 48px; text-decoration: underline; background: transparent; border: 0; padding: 8px 20px; }
+.awakening-sky { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at 50% 20%,#204458,#071523 80%); transition: opacity 1.5s; }
+.awakening-aperture { position: absolute; inset: 0; border: 18px double #867658; border-radius: 50% 50% 0 0; transform: scaleY(.02); transform-origin: top; transition: transform 3s ease; background-image: radial-gradient(circle,#e6c28c 1px,transparent 2px); background-size: 73px 61px; }
+.is-sky .awakening-sky { opacity: 1; }
+.is-sky .awakening-aperture { transform: scaleY(1); }
+.awakening-beam { position: absolute; left: 34%; right: 34%; top: 12%; bottom: 14%; background: linear-gradient(90deg,transparent,#8ce4d740,#efd59f80,#8ce4d740,transparent); clip-path: polygon(0 0,100% 0,53% 100%,47% 100%); transform: scaleY(0); transform-origin: bottom; transition: transform 2.5s 1s; }
+.is-sky .awakening-beam { transform: scaleY(1); }
+.is-sky .awakening-machine { opacity: 0; transform: scale(.65) translateY(30%); pointer-events: none; }
+.awakening-castle { position: absolute; inset: 14% 0 0; opacity: 0; transform: scale(.88); transition: opacity 2s, transform 3s; }
+.awakening-castle > img, .awakening-windows { position: absolute; width: 100%; height: 100%; object-fit: contain; }
+.awakening-windows { fill: #f4d39b; }
+.awakening-windows > path { opacity: 0; }
+.castle-connections { fill: none; stroke: var(--aqua); stroke-width: 3; stroke-dasharray: 500; stroke-dashoffset: 500; }
+.is-sky .awakening-castle { opacity: .7; transform: scale(1); }
+.awakening--illuminated .awakening-castle { opacity: 1; }
+.awakening--illuminated .awakening-windows > path { animation: window-light 1.2s calc(var(--window) * .6s) both; }
+.awakening--illuminated .castle-connections { animation: circuit-draw 3s ease both; }
+.awakening-castle-heart { position: absolute; top: 51%; left: 50%; transform: translate(-50%,-50%); }
+.awakening-castle-heart .astrolabe { width: 55px; }
+.awakening-castle-heart .astrolabe__lens { font-size: 12px; }
+.awakening-constellation { position: absolute; z-index: 2; left: 8%; right: 8%; top: 2%; height: 22%; display: grid; grid-template-columns: repeat(6,1fr); opacity: 0; }
+.awakening-constellation svg { position: absolute; width: 100%; height: 65%; top: 0; overflow: visible; }
+.awakening-constellation path { fill: none; stroke: var(--gold); stroke-width: 1.5; stroke-dasharray: 700; stroke-dashoffset: 700; }
+.awakening-constellation span { display: flex; flex-direction: column; align-items: center; opacity: 0; padding-top: 13px; }
+.awakening-constellation span:nth-of-type(odd) { padding-top: 35px; }
+.awakening-constellation i { font-style: normal; color: var(--aqua); font-size: 23px; text-shadow: 0 0 12px #8ce4d7; }
+.awakening-constellation b { color: var(--gold); font: bold 23px Georgia,serif; background: #081b2bd9; padding: 0 8px; border-radius: 50%; }
+.is-revealed .awakening-constellation { opacity: 1; }
+.is-revealed .awakening-constellation path { animation: circuit-draw 3.5s ease both; }
+.is-revealed .awakening-constellation span { animation: window-light .5s calc(var(--star) * .5s) both; }
+.awakening-code { position: absolute; z-index: 3; bottom: 3%; left: 6%; right: 6%; padding: 10px; text-align: center; background: #081b2bea; border: 1px solid var(--gold-dark); border-radius: 6px; font-size: 16px; }
+.awakening-code b { display: inline-block; font: bold 28px Georgia,serif; letter-spacing: .17em; color: var(--gold); margin-left: 8px; }
+.awakening--constellation .awakening-code { animation: window-light 1s 3s both; }
+.awakening--summary { gap: 10px; }
+.awakening-victory { display: flex; align-items: center; justify-content: center; gap: 24px; flex: 1; min-height: 80px; }
+.awakening-victory > img { height: 100%; max-height: 210px; max-width: 30%; }
+.awakening-victory .astrolabe { width: 105px; }
+.awakening-victory output { color: var(--gold); font: bold 42px Georgia,serif; letter-spacing: .17em; }
+.awakening-victory p { margin: 8px 0; }
+.awakening-discoveries { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; list-style: none; padding: 0; margin: 0; }
+.awakening-discoveries li { display: flex; align-items: center; gap: 10px; border: 1px solid #4b727b; background: #112e40; border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.45; }
+.awakening-discoveries b { display: block; color: var(--gold); }
+.awakening-discoveries .module-icon { width: 30px; height: 30px; }
+.awakening-lesson { text-align: center; font-size: 15px; margin: 0; }
+.awakening-final-actions { display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 10px; margin-top: auto; }
+.awakening-final-actions .button { min-height: 58px; font-size: 14px; padding: 10px; }
+@keyframes lab-dim { from { background-color: #294653; filter: brightness(1.2); } to { background-color: #071523; filter: brightness(.8); } }
+@keyframes fragment-install { from { opacity: .2; transform: translateY(-40px) scale(1.3); } to { opacity: 1; transform: none; } }
+@keyframes mechanism-turn { to { transform: rotate(360deg); } }
+@keyframes core-breathe { 50% { box-shadow: 0 0 44px #8ce4d780; } }
+@keyframes energy-flow { to { background-position: 200% 0; } }
+@keyframes chassis-assemble { from { transform: scale(.3); } to { transform: scale(1); } }
+@keyframes memory-light { from { opacity: .1; } to { opacity: 1; text-shadow: 0 0 8px #d7b9ee; } }
+@keyframes binary-flow { from { transform: translateX(-25px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes instrument-link { from { transform: scaleX(.2); } to { transform: scaleX(1); } }
+@keyframes lens-compare { 0% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 100% { transform: none; } }
+@keyframes window-light { from { opacity: 0; } to { opacity: 1; } }
+@keyframes circuit-draw { to { stroke-dashoffset: 0; } }
+@media (max-width: 850px) and (min-width: 601px) {
+  .awakening { padding: 16px; }
+  .awakening .central-machine { grid-template-columns: minmax(0,1fr) 140px minmax(0,1fr); padding: 24px 16px; gap: 14px 18px; grid-template-rows: repeat(3,minmax(90px,1fr)); }
+  .awakening .central-machine .astrolabe { width: 130px; }
+  .awakening .machine-module::after { width: 19px; }
+  .awakening .machine-module { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 5px; }
+  .awakening-sockets { gap: 6px; }
+  .awakening-socket small { font-size: 10px; }
+  .awakening-discoveries { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .awakening-discoveries li { min-height: 80px; }
+}
+@media (max-width: 600px) {
+  .screen-finale .topbar { min-height: 48px; }
+  .screen-finale .topbar__status, .screen-finale footer { display: none; }
+  .screen-finale main { padding: 5px; }
+  .awakening { padding: 10px; gap: 5px; }
+  .awakening-heading { flex-wrap: wrap; gap: 4px; }
+  .awakening-heading h1 { font-size: 25px; }
+  .awakening-heading .eyebrow { font-size: 9px; }
+  .awakening-tools { margin-left: auto; }
+  .awakening-guide p { font-size: 13px; }
+  .awakening-guide .guide-character { width: 34px; height: 40px; }
+  .awakening-guide { min-height: 44px; }
+  .awakening-machine { inset: 2%; gap: 8px; }
+  .awakening .central-machine { grid-template-columns: 1fr 74px 1fr; grid-template-rows: repeat(3,minmax(42px,1fr)); padding: 18px 10px; gap: 6px; }
+  .awakening .central-machine__core { grid-column: 2; grid-row: 1/4; padding: 0; }
+  .awakening .central-machine__core > span { position: static; font-size: 12px; }
+  .awakening .central-machine .astrolabe { width: 66px; }
+  .awakening .machine-module { padding: 8px 4px; min-height: 42px; grid-template-columns: 1fr; }
+  .awakening .machine-module strong { font-size: 10px; }
+  .awakening .machine-module:nth-child(even) { grid-column: 1; }
+  .awakening .machine-module:nth-child(odd) { grid-column: 3; }
+  .awakening .machine-module:nth-child(2), .awakening .machine-module:nth-child(3) { grid-row: 1; }
+  .awakening .machine-module:nth-child(4), .awakening .machine-module:nth-child(5) { grid-row: 2; }
+  .awakening .machine-module:nth-child(6), .awakening .machine-module:nth-child(7) { grid-row: 3; }
+  .awakening .machine-module::after, .awakening .module-number, .awakening .system-effect { display: none; }
+  .awakening-sockets { gap: 4px; }
+  .awakening-socket { min-height: 44px; padding: 5px; }
+  .awakening-socket b { font-size: 25px; }
+  .awakening-socket small { display: none; }
+  .awakening-controls { min-height: 161px; }
+  .awakening-controls p { font-size: 11px; }
+  .awakening-code { font-size: 12px; }
+  .awakening-code b { font-size: 24px; }
+  .awakening-constellation b { font-size: 18px; }
+  .awakening--summary { overflow-y: auto; }
+  .awakening-victory { gap: 14px; }
+  .awakening-victory .astrolabe { display: none; }
+  .awakening-victory output { font-size: 30px; }
+  .awakening-victory p { font-size: 12px; }
+  .awakening-discoveries { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .awakening-discoveries li { padding: 8px; font-size: 11px; }
+  .awakening-discoveries .module-icon { display: none; }
+  .awakening-lesson { font-size: 12px; }
+  .awakening-final-actions { grid-template-columns: 1fr; gap: 6px; }
+  .awakening-final-actions .button { min-height: 48px; }
+}
+.awakening--reduced *, .awakening--reduced *::before, .awakening--reduced *::after { animation: none !important; transition: none !important; }
+.awakening--reduced .is-revealed .awakening-constellation span, .awakening--reduced.awakening--illuminated .awakening-windows > path { opacity: 1; }
+.awakening--reduced .is-revealed .awakening-constellation path, .awakening--reduced.awakening--illuminated .castle-connections { stroke-dashoffset: 0; }
+/* Hidden mechanisms stop once the observatory takes over. */
+.is-sky .system-effect { animation: none !important; }
+/* Reserve intrinsic room for all three module rows above the six sockets. */
+@media (min-width: 851px) {
+  .awakening .central-machine { flex-shrink: 0; padding: 14px 20px; grid-template-columns: minmax(0,1fr) 150px minmax(0,1fr); grid-template-rows: repeat(3,minmax(46px,1fr)); gap: 8px 28px; }
+  .awakening .central-machine .astrolabe { width: 130px; }
+  .awakening .machine-module { min-height: 46px; padding: 8px; }
+  .awakening-machine { gap: 12px; }
+}
+.awakening .activation-control { min-height: 64px; font-size: 20px; }
+.awakening--fragments .module-components.is-lit .module-icon { animation: chassis-assemble 1s ease both; }
+.awakening--fragments .module-program.is-lit .module-icon { animation: mechanism-turn 3s linear infinite; }
+.awakening--fragments .module-memory.is-lit .module-icon { animation: memory-light 1s ease both; }
+.awakening--fragments .module-data.is-lit::after { animation: energy-flow 1s linear infinite; background: linear-gradient(90deg,#447b7e,var(--gold),var(--aqua),#447b7e); background-size: 200% 100%; }
+.awakening--fragments .module-everywhere.is-lit .module-icon { animation: instrument-link 1s ease both; }
+.awakening--fragments .module-ai.is-lit .module-icon { animation: lens-compare 1s ease both; }

@@ -1,15 +1,17 @@
 import { CentralMachine, FragmentCollection, GuideCharacter, InstructionPanel, MachineCore } from './components/Observatory';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { clearProgress, initialProgress, isFinaleUnlocked, loadProgress, saveProgress, startMission, type Progress } from './game/progress';
-import { finalCode, getMission, levels, missions, type Level } from './data/missions';
+import { getMission, levels, type Level } from './data/missions';
 import { ComponentMission } from './missions/components/ComponentMission';
 import { ProgramMission } from './missions/program/ProgramMission';
 import { MemoryMission } from './missions/memory/MemoryMission';
 import { DataMission } from './missions/data/DataMission';
 import { EverywhereMission } from './missions/everywhere/EverywhereMission';
+import { Finale } from './finale/Finale';
+import { finaleCode } from './finale/machine';
 import { AIMission } from './missions/ai/AIMission';
 
-type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale' | 'victory' | 'discoveries';
+type Screen = 'welcome' | 'level' | 'map' | 'mission' | 'finale';
 
 function Shell({ children, progress, screen, aiMissionActive, onReset, onHome, motion, onMotion }: { children: React.ReactNode; progress: Progress; screen: Screen; aiMissionActive: boolean; onReset: () => void; onHome: () => void; motion: boolean; onMotion: () => void }) {
   const total = progress.completed.length;
@@ -26,7 +28,7 @@ function Shell({ children, progress, screen, aiMissionActive, onReset, onHome, m
             <div className="mini-progress"><i style={{ width: `${(total / 6) * 100}%` }} /></div>
           </div>
         )}
-        <div className="topbar__tools"><button className="button button--quiet" aria-pressed={!motion} onClick={onMotion}>Animations : {motion ? 'oui' : 'non'}</button>{screen !== 'victory' && (progress.level || progress.started.length > 0) && <button className="button button--quiet" onClick={onReset}>Nouvelle équipe</button>}</div>
+        <div className="topbar__tools"><button className="button button--quiet" aria-pressed={!motion} onClick={onMotion}>Animations : {motion ? 'oui' : 'non'}</button>{screen !== 'finale' && (progress.level || progress.started.length > 0) && <button className="button button--quiet" onClick={onReset}>Nouvelle équipe</button>}</div>
       </header>
       <main id="main-content" tabIndex={-1}>{children}</main>
       <footer>Nuit de la Recherche · UPPA — Hendaye · Disponible hors ligne après installation</footer>
@@ -65,34 +67,14 @@ function LevelChoice({ onChoose, onBack }: { onChoose: (level: Level) => void; o
 }
 
 function MissionMap({ progress, onOpen, onFinale, onLevel, selected }: { progress: Progress; onOpen: (id: string) => void; onFinale: () => void; onLevel: () => void; selected: string | null }) {
-  const unlocked = isFinaleUnlocked(progress);
+  const unlocked = finaleCode(progress) !== null;
   const level = levels.find(item => item.id === progress.level);
   return <section className="map-view panel panel--wide"><div className="section-heading"><div><p className="eyebrow">Le laboratoire d’Abbadia</p><h1>Réveille la machine</h1></div><button className="level-pill" onClick={onLevel} aria-label="Changer de niveau">{level?.name} · changer</button></div><InstructionPanel mood={progress.completed.length ? 'encourage' : 'explain'}><p>Choisis un mécanisme. Tu peux les explorer dans l’ordre que tu veux.</p></InstructionPanel><p className="machine-progress" role="status">{progress.completed.length} mécanisme{progress.completed.length === 1 ? '' : 's'} réveillé{progress.completed.length === 1 ? '' : 's'} sur 6</p><CentralMachine progress={progress} onOpen={onOpen} selected={selected}/><FragmentCollection progress={progress}/><button className={`final-gate ${unlocked ? 'final-gate--open' : ''}`} disabled={!unlocked} onClick={onFinale}><span aria-hidden="true">✦</span><span><b>{unlocked ? 'Le redémarrage est prêt !' : 'La machine attend ses six fragments'}</b><small>{unlocked ? 'Assembler les fragments et réveiller le château' : `${progress.completed.length}/6 fragments retrouvés · Tous les mécanismes sont accessibles`}</small></span><span aria-hidden="true">→</span></button></section>;
 }
 
-function Finale({ progress, onBack, onVictory, motion }: { progress: Progress; onBack: () => void; onVictory: () => void; motion: boolean }) {
-  const [stage, setStage] = useState(0);
-  const code = missions.map(m => progress.fragments[m.id] ?? '').join('');
-  const ready = isFinaleUnlocked(progress) && code === finalCode;
-  const reduced = !motion || Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-  useEffect(() => {
-    if (!ready || stage === 0 || stage >= 8 || reduced) return;
-    const timer = window.setTimeout(() => setStage(n => n + 1), 650);
-    return () => window.clearTimeout(timer);
-  }, [stage, ready, reduced]);
-  const advance = () => setStage(n => reduced ? Math.min(8, n + 1) : 1);
-  return <section className={`finale panel panel--wide finale-stage-${stage}`}><button className="back-link" onClick={onBack}>← Retour au laboratoire</button><p className="eyebrow">Les six découvertes se rejoignent</p><h1>{stage >= 8 ? 'Le château s’illumine' : 'Le réveil de la machine'}</h1><InstructionPanel mood={stage >= 7 ? 'surprise' : 'encourage'}><p role="status">{stage === 0 ? 'Tes fragments ont rejoint la machine. Ils s’assemblent dans l’ordre des six mécanismes.' : stage <= 6 ? `${stage} mécanisme${stage > 1 ? 's' : ''} activé${stage > 1 ? 's' : ''}… La lumière circule !` : stage === 7 ? 'La machine se réveille. Les observations reprennent !' : 'Regarde : la lumière du laboratoire rejoint les étoiles d’Abbadia !'}</p></InstructionPanel><FragmentCollection progress={progress}/><output className="assembled-code" aria-label="Code reconstitué automatiquement">{ready ? code : 'Fragments incomplets'}</output>{stage < 8 ? <CentralMachine progress={progress} activation={Math.min(stage, 6)}/> : <img className="finale-castle" src="/assets/abbadia-night.svg" alt="Le château-observatoire et son laboratoire illuminés"/>}<div className="finale-actions">{stage === 0 && <button className="button button--primary" disabled={!ready} onClick={advance}>Réveiller la machine ✦</button>}{stage > 0 && stage < 8 && (reduced ? <button className="button button--primary" onClick={advance}>Continuer le réveil →</button> : <button className="button button--secondary" onClick={() => setStage(8)}>Passer l’animation</button>)}{stage >= 8 && <button className="button button--primary" onClick={onVictory}>Découvrir notre réussite →</button>}</div></section>;
-}
-
-function Discoveries({ onBack }: { onBack: () => void }) {
-  return <section className="panel panel--wide"><button className="back-link" onClick={onBack}>← Retour à la réussite</button><p className="eyebrow">Le carnet de l’équipe</p><h1>Nos six découvertes</h1><ul className="learning-list">{missions.map(m => <li key={m.id}><span aria-hidden="true">{m.icon}</span><p><b>{m.shortTitle}</b>{m.learning}</p></li>)}</ul></section>;
-}
-function Victory({ onDiscoveries, onReplay, onNewTeam }: { onDiscoveries: () => void; onReplay: () => void; onNewTeam: () => void }) {
-  return <section className="victory panel panel--wide"><p className="eyebrow">Mission accomplie au laboratoire d’Abbadia !</p><h1>Machine réveillée !</h1><div className="victory-scene"><img src="/assets/abbadia-night.svg" alt="Le château-observatoire illuminé au bord de l’océan"/><MachineCore awake/><GuideCharacter mood="surprise"/></div><p className="lead">Un ordinateur ne fonctionne pas grâce à un seul élément : composants, programmes, mémoire et données travaillent ensemble. Avec des capteurs et des intelligences artificielles, l’informatique peut se trouver partout.</p><p className="victory-lesson">Une IA apprend à partir d’exemples et peut se tromper : ton regard reste essentiel.</p><div className="actions"><button className="button button--primary" onClick={onDiscoveries}>Revoir mes découvertes</button><button className="button button--secondary" onClick={onReplay}>Rejouer une mission</button><button className="button button--quiet" onClick={onNewTeam}>Nouvelle équipe</button></div><p className="helper">Tes découvertes sont sauvegardées sur cette tablette.</p></section>;
-}
-
 export default function App() {
   const [progress, setProgress] = useState<Progress>(() => loadProgress());
+  const finalePresented = useRef(isFinaleUnlocked(progress));
   const [motion, setMotion] = useState(() => { try { return localStorage.getItem('abbadia-motion') !== 'off'; } catch { return true; } });
   const previousScreen = useRef<Screen>('welcome');
   const [replaying, setReplaying] = useState(false);
@@ -114,25 +96,26 @@ export default function App() {
   function openMission(id: string) { if (replaying) setReplayProgress({ ...initialProgress(), level: progress.level }); else setProgress(startMission(progress, id)); setActiveMissionId(id); setScreen('mission'); window.scrollTo(0, 0); }
   function reset() {
     if (!window.confirm('Effacer toute la progression de cette équipe ?')) return;
-    clearProgress(); setProgress(initialProgress()); setReplaying(false); setActiveMissionId(null); setScreen('welcome');
+    clearProgress(); finalePresented.current = false; setProgress(initialProgress()); setReplaying(false); setActiveMissionId(null); setScreen('welcome');
   }
   const missionProgress = replaying ? replayProgress : progress;
   const updateMission = replaying ? setReplayProgress : setProgress;
-  function returnToLab() { setScreen(!replaying && isFinaleUnlocked(progress) ? 'finale' : 'map'); }
+  function returnToLab() {
+    if (!replaying && !finalePresented.current && finaleCode(progress)) { finalePresented.current = true; setScreen('finale'); }
+    else setScreen('map');
+  }
 
   let content: React.ReactNode;
   if (screen === 'welcome') content = <Welcome hasProgress={Boolean(progress.level)} onStart={chooseLevel} onResume={() => setScreen(progress.level ? 'map' : 'level')} />;
   else if (screen === 'level') content = <LevelChoice onChoose={chooseLevel} onBack={() => setScreen('welcome')} />;
-  else if (screen === 'map') content = <MissionMap progress={progress} onOpen={openMission} onFinale={() => { if (isFinaleUnlocked(progress)) setScreen('finale'); }} onLevel={() => setScreen('level')} selected={activeMissionId} />;
+  else if (screen === 'map') content = <MissionMap progress={progress} onOpen={openMission} onFinale={() => { if (finaleCode(progress)) { finalePresented.current = true; setReplaying(false); setScreen('finale'); } }} onLevel={() => setScreen('level')} selected={activeMissionId} />;
   else if (screen === 'mission' && activeMission?.id === 'components') content = <ComponentMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
   else if (screen === 'mission' && activeMission?.id === 'program') content = <ProgramMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
   else if (screen === 'mission' && activeMission?.id === 'memory') content = <MemoryMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
   else if (screen === 'mission' && activeMission?.id === 'data') content = <DataMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
   else if (screen === 'mission' && activeMission?.id === 'everywhere') content = <EverywhereMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
   else if (screen === 'mission' && activeMission?.id === 'ai') content = <AIMission key={activeMission.id} mission={activeMission} progress={missionProgress} onProgress={updateMission} onBack={returnToLab} />;
-  else if (screen === 'finale') content = <Finale progress={progress} onBack={() => setScreen('map')} onVictory={() => setScreen('victory')} motion={motion} />;
-  else if (screen === 'discoveries') content = <Discoveries onBack={() => setScreen('victory')} />;
-  else content = <Victory onNewTeam={reset} onDiscoveries={() => setScreen('discoveries')} onReplay={() => { setReplaying(true); setScreen('map'); }} />;
+  else content = <Finale progress={progress} onBack={() => { setReplaying(true); setScreen('map'); }} onNewTeam={reset} motion={motion} />;
 
   return <Shell progress={progress} screen={screen} aiMissionActive={screen === 'mission' && activeMissionId === 'ai'} onReset={reset} onHome={() => { setReplaying(false); setScreen('welcome'); }} motion={motion} onMotion={() => setMotion(value => !value)}>{replaying && screen !== 'welcome' && <p className="replay-notice">Entraînement libre · Les six fragments de ton équipe restent enregistrés.</p>}{content}</Shell>;
 }

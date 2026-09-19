@@ -104,11 +104,50 @@ try {
         await button(/Composants.*Terminée.*fragment 4/).waitFor();
       }
     }
-    assert.equal(await page.getByLabel('Code reconstitué automatiquement').textContent(), '472596');
-    await capture('finale'); await tap(/Réveiller la machine/);
-    await button(/Découvrir notre réussite/).waitFor();
-    await capture('finale-lit'); await tap(/Découvrir notre réussite/);
-    await capture('victory'); await tap(/Revoir mes découvertes/); await capture('discoveries');
+    async function finaleCapture(name) {
+      await capture(`awakening-${name}`);
+      if (width >= 740) {
+        assert(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), `${name}: vertical overflow`);
+        for (const selector of ['.awakening-tools', '.awakening-controls', '.awakening-final-actions']) {
+          const item = page.locator(selector);
+          if (await item.count()) { const rect = await item.boundingBox(); assert(rect.y >= 0 && rect.y + rect.height <= height, `${name}: hidden controls`); }
+        }
+      }
+    }
+    const waitPhase = async name => page.locator(`[data-phase="${name}"]`).waitFor();
+    await finaleCapture('idle'); await waitPhase('dimming'); await finaleCapture('dimming');
+    await waitPhase('fragments'); await page.getByLabel('Mémoire : fragment 2 installé', {exact:true}).waitFor(); await finaleCapture('fragments');
+    await waitPhase('ready'); await finaleCapture('ready');
+    const control = button(/Maintiens pour activer/);
+    const rect = await control.boundingBox();
+    const session = await context.newCDPSession(page);
+    const touch = [{x:rect.x+rect.width/2,y:rect.y+rect.height/2}];
+    await session.send('Input.dispatchTouchEvent', {type:'touchStart',touchPoints:touch});
+    await waitPhase('charging'); await finaleCapture('charging');
+    await session.send('Input.dispatchTouchEvent', {type:'touchEnd',touchPoints:[]});
+    await waitPhase('ready');
+    await page.getByText(/Encore un petit effort/).waitFor();
+    await session.send('Input.dispatchTouchEvent', {type:'touchStart',touchPoints:touch});
+    await waitPhase('awakening');
+    await session.send('Input.dispatchTouchEvent', {type:'touchEnd',touchPoints:[]});
+    await session.detach(); await finaleCapture('awakening');
+    await waitPhase('observatory'); await finaleCapture('observatory');
+    await waitPhase('constellation'); await page.getByLabel('Code scientifique reconstitué').waitFor({state:'visible'}); await finaleCapture('constellation');
+    assert.match(await page.getByLabel('Code scientifique reconstitué').textContent(), /472596/);
+    await waitPhase('illuminated'); await finaleCapture('illuminated');
+    await waitPhase('summary'); await finaleCapture('summary');
+    assert.equal(await page.getByLabel('Code scientifique', {exact:true}).textContent(), '472596');
+    assert.equal(await page.locator('.awakening-final-actions button').count(),3);
+    await tap('Rejouer le réveil'); await waitPhase('idle'); await tap('Passer'); await waitPhase('summary');
+    await tap('Revoir une mission'); await button(/Données.*Terminée.*fragment 5/).waitFor();
+    await page.reload(); await tap(/Entrer dans le laboratoire/); await button(/Le redémarrage est prêt/).waitFor();
+    assert.equal(await page.locator('[data-phase]').count(),0);
+    await page.emulateMedia({ reducedMotion:'reduce' });
+    await tap(/Le redémarrage est prêt/);
+    for (let i=0;i<8;i++) await tap('Continuer le réveil');
+    await tap('Activer sans maintien');
+    for (let i=0;i<4;i++) await tap('Continuer le réveil');
+    await waitPhase('summary'); await finaleCapture('reduced-summary');
     assert.deepEqual(errors, []);
     console.log(`PASS ${width}×${height}: six missions offline, fragments, reload, finale, touch selection, no horizontal overflow or browser error`);
     await context.close();

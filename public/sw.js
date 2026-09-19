@@ -1,4 +1,4 @@
-const CACHE = 'abbadie-v10';
+const CACHE = 'abbadie-v11';
 const CORE = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/assets/abbadia-night.svg', '/og.png'];
 
 self.addEventListener('install', (event) => {

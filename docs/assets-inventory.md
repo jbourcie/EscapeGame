@@ -91,3 +91,11 @@ Ces éléments remplacent la présentation provisoire de l’accueil et de la ca
 | Carte de partage originale | PNG, largeur 1200 px, ~1,3 Mo | `public/og.png` | Métadonnées de partage uniquement ; cache explicite, aucun rôle pédagogique |
 
 Aucune police distante, bibliothèque graphique ou image externe. Les SVG React ne nécessitent pas de requête supplémentaire. Le prompt de la carte de partage se trouve dans `.prompts/social-preview.md`. Les titres, consignes, états et chiffres restent en HTML dans tout le parcours.
+
+## Le Réveil d’Abbadia
+
+- Machine, astrolabe, icônes, gardien et château existants réutilisés sans modification.
+- `src/finale/Finale.tsx` : constellation à six étoiles et surcouche SVG de quatre fenêtres et connexions ; incluses dans le JavaScript pré-caché.
+- `src/finale/finale.css` : arche ouvrante, faisceau cyan/or, insertion des plaques, six effets distincts et pulsation lente ; inclus dans le CSS pré-caché.
+- `src/finale/audio.ts` : synthèse Web Audio locale ; aucun média à télécharger.
+- Aucun raster ni ressource distante ajouté. Cache `abbadie-v11`.

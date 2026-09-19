@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
@@ -76,7 +76,7 @@ beforeEach(() => {
   window.confirm = vi.fn(() => true);
 });
 
-afterEach(() => cleanup());
+afterEach(() => { cleanup(); vi.useRealTimers(); });
 
 describe('parcours d’équipe', () => {
   it('joue les six missions, débloque la finale et redémarre la machine', async () => {
@@ -115,12 +115,11 @@ describe('parcours d’équipe', () => {
       await user.click(screen.getByRole('button', { name: /Retourner au laboratoire/i }));
     }
 
-    expect(screen.getByLabelText(/Code reconstitué automatiquement/i).textContent).toBe(finalCode);
+    expect(screen.getByRole('heading', { name: 'Le Réveil d’Abbadia' })).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
-    await user.click(screen.getByRole('button', { name: /Réveiller la machine/i }));
-    await user.click(screen.getByRole('button', { name: /Passer l’animation/i }));
-    await user.click(screen.getByRole('button', { name: /Découvrir notre réussite/i }));
+    await user.click(screen.getByRole('button', { name: 'Passer' }));
     expect(screen.getByRole('heading', { name: /Machine réveillée/i })).toBeTruthy();
+    expect(screen.getByLabelText('Code scientifique').textContent).toBe(finalCode);
   });
 
   it('reprend la progression enregistrée après un nouveau rendu', async () => {
@@ -152,9 +151,7 @@ async function enterSavedFinale(user: ReturnType<typeof userEvent.setup>) {
 }
 async function showVictory(user: ReturnType<typeof userEvent.setup>) {
   await enterSavedFinale(user);
-  await user.click(screen.getByRole('button', { name: /Réveiller la machine/i }));
-  await user.click(screen.getByRole('button', { name: /Passer l’animation/i }));
-  await user.click(screen.getByRole('button', { name: /Découvrir notre réussite/i }));
+  await user.click(screen.getByRole('button', { name: 'Passer' }));
 }
 
 describe('aventure et finition commune', () => {
@@ -189,22 +186,24 @@ describe('aventure et finition commune', () => {
     expect(screen.queryByLabelText(/Code reconstitué/)).toBeNull();
   });
   it('assemble les fragments par ordre de mission et progresse sans saisie', async () => {
-    const user = userEvent.setup(); await enterSavedFinale(user);
-    expect(screen.getByLabelText(/Code reconstitué/).textContent).toBe('472596');
+    vi.useFakeTimers(); saveProgress(completedProgress()); render(<App/>);
+    fireEvent.click(screen.getByRole('button', { name: /Entrer dans le laboratoire/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Le redémarrage est prêt/ }));
+    for (const ms of [1200, 2800, 1000, 1000]) act(() => vi.advanceTimersByTime(ms));
+    expect(screen.getByText('2 / 6 systèmes activés')).toBeTruthy();
+    expect(screen.getByLabelText('Composants : fragment 4 installé')).toBeTruthy();
     expect(screen.queryByRole('textbox')).toBeNull();
-    await user.click(screen.getByRole('button', { name: /Réveiller la machine/ }));
-    await waitFor(() => expect(screen.getByText(/2 mécanismes activés/)).toBeTruthy());
   });
   it('permet de revoir les six découvertes', async () => {
     const user = userEvent.setup(); await showVictory(user);
-    await user.click(screen.getByRole('button', { name: /Revoir mes découvertes/ }));
-    for (const mission of missions) expect(screen.getByText(mission.learning, { exact: false })).toBeTruthy();
-    await user.click(screen.getByRole('button', { name: /Retour à la réussite/ }));
-    expect(screen.getByRole('heading', { name: /Machine réveillée/ })).toBeTruthy();
+    const discoveries = screen.getByRole('list', { name: 'Nos six découvertes' });
+    expect(within(discoveries).getAllByRole('listitem')).toHaveLength(6);
+    expect(within(discoveries).getByText(/apprend avec des exemples et peut se tromper/)).toBeTruthy();
+    expect(screen.getByRole('heading', { name: /Machine réveillée/i })).toBeTruthy();
   });
   it('rejoue une vraie mission vierge sans effacer les fragments acquis', async () => {
     const user = userEvent.setup(); await showVictory(user);
-    await user.click(screen.getByRole('button', { name: /Rejouer une mission/ }));
+    await user.click(screen.getByRole('button', { name: /Revoir une mission/ }));
     await user.click(screen.getByRole('button', { name: /Données.*Terminée/ }));
     expect(screen.queryByLabelText('Fragment 5 transmis à la machine centrale')).toBeNull();
     await solveData(user);
@@ -217,9 +216,9 @@ describe('aventure et finition commune', () => {
   it('confirme l’effacement à la victoire, conserve la partie en cas d’annulation', async () => {
     const user = userEvent.setup(); await showVictory(user);
     vi.mocked(window.confirm).mockReturnValueOnce(false);
-    await user.click(screen.getByRole('button', { name: /Nouvelle équipe/ }));
+    await user.click(screen.getByRole('button', { name: /Accueillir une nouvelle équipe/ }));
     expect(loadProgress().completed).toHaveLength(6);
-    await user.click(screen.getByRole('button', { name: /Nouvelle équipe/ }));
+    await user.click(screen.getByRole('button', { name: /Accueillir une nouvelle équipe/ }));
     expect(window.confirm).toHaveBeenCalledTimes(2);
     expect(loadProgress()).toEqual(initialProgress());
     expect(screen.getAllByRole('radio')).toHaveLength(3);
@@ -243,19 +242,20 @@ describe('aventure et finition commune', () => {
     const user = userEvent.setup(); await enterSavedFinale(user);
     await user.click(screen.getByRole('button', { name: /Animations : oui/ }));
     expect(localStorage.getItem('abbadia-motion')).toBe('off');
-    await user.click(screen.getByRole('button', { name: /Réveiller la machine/ }));
-    expect(screen.queryByRole('button', { name: /Passer l’animation/ })).toBeNull();
-    for (let i = 0; i < 7; i++) await user.click(screen.getByRole('button', { name: /Continuer le réveil/ }));
-    expect(screen.getByRole('heading', { name: /Le château s’illumine/ })).toBeTruthy();
+    for (let i = 0; i < 8; i++) await user.click(screen.getByRole('button', { name: /Continuer le réveil/ }));
+    expect(screen.getByRole('button', { name: /Maintiens pour activer/ })).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: /Activer sans maintien/ }));
+    for (let i = 0; i < 4; i++) await user.click(screen.getByRole('button', { name: /Continuer le réveil/ }));
+    expect(screen.getByRole('heading', { name: /MACHINE RÉVEILLÉE/ })).toBeTruthy();
   });
   it('respecte prefers-reduced-motion sans imposer d’attente', async () => {
     const original = window.matchMedia;
     window.matchMedia = vi.fn().mockReturnValue({ matches: true });
     try {
       const user = userEvent.setup(); await enterSavedFinale(user);
-      await user.click(screen.getByRole('button', { name: /Réveiller la machine/ }));
       expect(screen.getByRole('button', { name: /Continuer le réveil/ })).toBeTruthy();
-      expect(screen.queryByRole('button', { name: /Passer l’animation/ })).toBeNull();
+      await user.click(screen.getByRole('button', { name: 'Passer' }));
+      expect(screen.getByRole('heading', { name: /MACHINE RÉVEILLÉE/ })).toBeTruthy();
     } finally { window.matchMedia = original; }
   });
   it('accède au laboratoire et à une mission au clavier avec un focus utile', async () => {
@@ -273,19 +273,43 @@ describe('aventure et finition commune', () => {
   });
 });
 
-it('achève automatiquement les six activations puis illumine le château', async () => {
-  const user = userEvent.setup(); await enterSavedFinale(user);
-  await user.click(screen.getByRole('button', { name: /Réveiller la machine/ }));
-  await waitFor(() => expect(screen.getByRole('heading', { name: /Le château s’illumine/ })).toBeTruthy(), { timeout: 6500 });
-  await user.click(screen.getByRole('button', { name: /Découvrir notre réussite/ }));
-  expect(screen.getByRole('heading', { name: /Machine réveillée/ })).toBeTruthy();
-}, 8000);
+it('achève automatiquement les six activations puis illumine le château après le geste', async () => {
+  vi.useFakeTimers(); saveProgress(completedProgress()); render(<App/>);
+    fireEvent.click(screen.getByRole('button', { name: /Entrer dans le laboratoire/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Le redémarrage est prêt/ }));
+  for (const ms of [1200, 2800, 1000, 1000, 1000, 1000, 1000, 1000]) act(() => vi.advanceTimersByTime(ms));
+  fireEvent.click(screen.getByRole('button', { name: /Activer sans maintien/ }));
+  for (let i = 0; i < 3; i++) act(() => vi.advanceTimersByTime(5000));
+  expect(screen.getByText(/La Machine d’Abbadia est réveillée/)).toBeTruthy();
+  act(() => vi.advanceTimersByTime(5000));
+  expect(screen.getByRole('heading', { name: /MACHINE RÉVEILLÉE/ })).toBeTruthy();
+});
 
 it('refuse le réveil si une sauvegarde contient un fragment incohérent', async () => {
   const user = userEvent.setup(); const progress = completedProgress(); progress.fragments.ai = '0';
   saveProgress(progress); render(<App/>);
   await user.click(screen.getByRole('button', { name: /Entrer dans le laboratoire/ }));
-  await user.click(screen.getByRole('button', { name: /Le redémarrage est prêt/ }));
-  expect((screen.getByRole('button', { name: /Réveiller la machine/ }) as HTMLButtonElement).disabled).toBe(true);
-  expect(screen.queryByRole('button', { name: /Découvrir notre réussite/ })).toBeNull();
+  const gate = screen.getByRole('button', { name: /La machine attend ses six fragments/ });
+  expect((gate as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.queryByRole('button', { name: 'Passer' })).toBeNull();
+});
+
+it('rejoue le réveil et recharge sans relance automatique ni perte de fragments', async () => {
+  const user = userEvent.setup(); await showVictory(user);
+  const saved = loadProgress();
+  await user.click(screen.getByRole('button', { name: 'Rejouer le réveil' }));
+  expect(screen.getByText('Les six fragments sont réunis…')).toBeTruthy();
+  expect(loadProgress()).toEqual(saved);
+  cleanup(); render(<App/>);
+  await user.click(screen.getByRole('button', { name: /Reprendre la partie/ }));
+  expect(screen.queryByRole('button', { name: 'Passer' })).toBeNull();
+  expect(loadProgress()).toEqual(saved);
+});
+
+it('recharge après le bilan sans relancer le réveil', async () => {
+  const user = userEvent.setup(); await showVictory(user); const saved = loadProgress();
+  cleanup(); render(<App/>);
+  await user.click(screen.getByRole('button', { name: /Reprendre la partie/ }));
+  expect(screen.getByRole('heading', { name: 'Réveille la machine' })).toBeTruthy();
+  expect(loadProgress()).toEqual(saved);
 });

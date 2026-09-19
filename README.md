@@ -78,3 +78,7 @@ Les six fragments `4`, `7`, `2`, `5`, `9`, `6` s’assemblent automatiquement en
 Le bouton « Animations » mémorise une préférence sur la tablette ; `prefers-reduced-motion` est également respecté. Dans ce mode, la finale avance sur action de l’équipe. Tous les éléments importants sont des contrôles HTML accessibles au clavier. Les mises en page visent 768×1024, 1024×768 et les petites largeurs.
 
 Les six missions et la finale ont été vérifiées dans Chrome en 768×1024, 1024×768 et 390×844, entièrement hors ligne après un premier chargement. Le script `scripts/check-browser.mjs` reproduit le parcours et les captures avec une installation de Playwright réservée aux tests. Voir les commandes et les limites sur appareils physiques dans [le rapport de vérification](docs/validation-finition.md).
+
+### Le Réveil d’Abbadia
+
+La finale interactive de 32 secondes est décrite dans [docs/finale.md](docs/finale.md) : insertion des fragments, maintien tactile/clavier, constellation, illumination et bilan. Sons locaux facultatifs, mouvement réduit, passage direct et rejeu sans perte de progression. Validation dans [docs/validation-reveil.md](docs/validation-reveil.md).

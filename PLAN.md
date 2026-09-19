@@ -7,7 +7,7 @@
 3. Elle choisit librement l'un des six modules sur la carte.
 4. Pour les six modules, elle joue directement à l’écran et chaque fragment est enregistré automatiquement.
 5. Une réussite conserve le fragment, affiche l'idée pédagogique, puis propose le retour au laboratoire.
-6. Après les six réussites, le retour au laboratoire ouvre la finale : les fragments s’assemblent automatiquement en `472596`, puis l’équipe réveille les six mécanismes.
+6. Après les six réussites, le retour au laboratoire ouvre la finale : les six fragments s’insèrent dans la machine ; l’équipe maintient le contrôle pour déclencher Le Réveil d’Abbadia, puis le code `472596` se révèle dans le ciel.
 7. La victoire propose le carnet des six découvertes, le rejeu sans effacer les fragments et une nouvelle équipe après confirmation.
 
 ## Écrans
@@ -21,7 +21,7 @@
 
 ## États du jeu
 
-- `welcome`, `level`, `map`, `mission`, `finale`, `victory`, `discoveries` pour la navigation.
+- `welcome`, `level`, `map`, `mission`, `finale` pour la navigation ; le bilan est l’état `summary` de la finale.
 - Niveau choisi : `explorer`, `scientist` ou `expert`.
 - Par mission : `not-started`, `in-progress`, `completed`.
 - Progression persistée : identifiant du niveau, missions validées, fragments, tentatives, indices et état détaillé de la mission IA.
@@ -146,10 +146,17 @@ La logique de jeu est pensée autour d’événements `select`, `place` et `rese
 - Composants partagés : `MissionHeader`, `InstructionPanel`, `GuideCharacter`, `ModuleIcon`, `MachineCore`, `CentralMachine`, `FragmentCollection`, `FragmentReveal`, `CompletionPanel`. Les boutons et zones de dépôt existants sont conservés.
 - Guide unique : neutre, explication, encouragement, erreur bienveillante, réussite et surprise ; textes pédagogiques en HTML.
 - La finale se prépare au retour de la dernière mission, sans interrompre la lecture de sa réussite. Le code est dérivé des fragments de la sauvegarde dans l’ordre des missions, puis vérifié contre `finalCode`.
-- Animation finale de moins de cinq secondes, pouvant être passée ; en mouvement réduit, l’équipe avance par boutons sans animation ni attente. Une préférence locale permet aussi de neutraliser les animations CSS.
+- Finale « Le Réveil d’Abbadia » de 32 secondes hors attente : machine à états typée, maintien de deux secondes, ouverture vers le ciel, constellation, illumination et bilan. Passer/rejouer, alternative sans maintien, mouvement réduit par étapes et sons synthétisés facultatifs. Voir `docs/finale.md`.
 - Rejeu : partie transitoire vierge pour la mission choisie, avec le niveau de l’équipe ; les fragments persistés ne sont jamais effacés. Retour à l’accueil et nouvelle équipe clairement séparés.
 - Cache `abbadie-v10` : château et carte de partage ajoutés, scripts/styles toujours issus du build. Nettoyage limité aux caches `abbadie-*` obsolètes.
 - Vérifications automatisées et limites visuelles consignées dans `docs/validation-finition.md`.
 - Validation Chrome du 19 septembre : six missions et finale hors ligne aux deux formats tablette et sur mobile ; script reproductible `scripts/check-browser.mjs`.
 - Réserves et plateaux côte à côte sur tablette, défilement du document et destinations persistantes à l’écran ; focus et défilement vers chaque révélation de fragment. Sur mobile, les flèches décoratives ne capturent aucun toucher.
 - Les assets statiques de même origine sont retrouvés dans le cache courant malgré `Vary: Origin`, pour permettre le premier rechargement hors ligne depuis le serveur de prévisualisation.
+
+## Réveil interactif — septembre 2026
+
+- Réducteur et durées dans `src/finale/machine.ts`, interface dans `Finale.tsx`, effets isolés dans `finale.css`, audio local dans `audio.ts`.
+- Code dérivé exclusivement des fragments réels ; aucune modification des six missions ni du schéma de sauvegarde.
+- Trois actions du bilan : rejouer le réveil, revoir une mission, accueillir une nouvelle équipe après confirmation.
+- Cache PWA porté à `abbadie-v11` ; validation spécifique dans `docs/validation-reveil.md`.

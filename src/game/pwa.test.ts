@@ -71,7 +71,7 @@ describe('mise à jour visuelle hors ligne', () => {
       URL,
       fetch: async () => { throw new Error('Le réseau est coupé'); },
       caches: { match: async (_request: unknown, options: { cacheName: string; ignoreVary: boolean }) => {
-        expect(options.cacheName).toBe('abbadie-v10');
+        expect(options.cacheName).toBe('abbadie-v11');
         return options.ignoreVary ? asset : undefined;
       } },
     });
@@ -94,7 +94,7 @@ describe('mise à jour visuelle hors ligne', () => {
     const deleted: string[] = []; let claimed = false;
     runInNewContext(readFileSync('public/sw.js', 'utf8'), {
       self: { addEventListener: (name: string, listener: typeof listeners[string]) => { listeners[name] = listener; }, clients: { claim: async () => { claimed = true; } } },
-      caches: { keys: async () => ['abbadie-v8', 'abbadie-v10', 'another-app-v1'], delete: async (name: string) => { deleted.push(name); } },
+      caches: { keys: async () => ['abbadie-v8', 'abbadie-v11', 'another-app-v1'], delete: async (name: string) => { deleted.push(name); } },
     });
     let activation: Promise<unknown> = Promise.resolve();
     listeners.activate({ waitUntil: promise => { activation = promise; } });
