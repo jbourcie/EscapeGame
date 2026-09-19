@@ -110,6 +110,7 @@ describe('parcours d’équipe', () => {
       }
       if (!['program','everywhere'].includes(mission.id)) expect(screen.getByRole('heading', { name: mission.id === 'components' ? /Le cœur de la machine bat/i : mission.id === 'memory' ? /La bibliothèque révèle/i : mission.id === 'data' ? /Le message céleste/i : /Les observations révèlent le 6/i })).toBeTruthy();
       expect(screen.getByLabelText(`Fragment ${mission.answer} transmis à la machine centrale`)).toBeTruthy();
+      expect(document.activeElement).toBe(screen.getByLabelText(`Fragment ${mission.answer} transmis à la machine centrale`).closest('section'));
       expect(loadProgress().fragments[mission.id]).toBe(mission.answer);
       await user.click(screen.getByRole('button', { name: /Retourner au laboratoire/i }));
     }

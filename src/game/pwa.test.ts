@@ -17,7 +17,7 @@ describe('ressources hors ligne', () => {
     expect(worker).toContain("'/manifest.webmanifest'");
     expect(worker).toContain("'/icons/icon-192.png'");
     expect(worker).toContain("'/icons/icon-512.png'");
-    expect(worker).toContain("caches.match(event.request)");
+    expect(worker).toContain("caches.match(event.request,");
   });
 
   it('ne charge aucune ressource distante dans l’application', () => {
@@ -62,6 +62,23 @@ describe('ressources hors ligne', () => {
 });
 
 describe('mise à jour visuelle hors ligne', () => {
+  it('retrouve les assets pré-cachés malgré le Vary Origin des requêtes de modules', async () => {
+    let listener: (event: unknown) => void = () => {};
+    const asset = { offline: true };
+    const origin = ['https:', '', 'local.test'].join('/');
+    runInNewContext(readFileSync('public/sw.js', 'utf8'), {
+      self: { location: { origin }, addEventListener: (name: string, callback: typeof listener) => { if (name === 'fetch') listener = callback; } },
+      URL,
+      fetch: async () => { throw new Error('Le réseau est coupé'); },
+      caches: { match: async (_request: unknown, options: { cacheName: string; ignoreVary: boolean }) => {
+        expect(options.cacheName).toBe('abbadie-v10');
+        return options.ignoreVary ? asset : undefined;
+      } },
+    });
+    let response: Promise<unknown> = Promise.resolve();
+    listener({ request: { method: 'GET', url: `${origin}/assets/index-test.js` }, respondWith: (promise: Promise<unknown>) => { response = promise; } });
+    await expect(response).resolves.toBe(asset);
+  });
   it('pré-cache tous les nouveaux visuels utilisés par l’interface et le partage', () => {
     const worker = readFileSync('public/sw.js', 'utf8');
     for (const path of ['/assets/abbadia-night.svg', '/og.png']) {
@@ -77,7 +94,7 @@ describe('mise à jour visuelle hors ligne', () => {
     const deleted: string[] = []; let claimed = false;
     runInNewContext(readFileSync('public/sw.js', 'utf8'), {
       self: { addEventListener: (name: string, listener: typeof listeners[string]) => { listeners[name] = listener; }, clients: { claim: async () => { claimed = true; } } },
-      caches: { keys: async () => ['abbadie-v8', 'abbadie-v9', 'another-app-v1'], delete: async (name: string) => { deleted.push(name); } },
+      caches: { keys: async () => ['abbadie-v8', 'abbadie-v10', 'another-app-v1'], delete: async (name: string) => { deleted.push(name); } },
     });
     let activation: Promise<unknown> = Promise.resolve();
     listeners.activate({ waitUntil: promise => { activation = promise; } });

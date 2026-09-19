@@ -41,7 +41,7 @@ L’icône et le manifeste sont inclus localement. Une fois installée, l’appl
 4. Activer le mode hors ligne, puis recharger la page.
 5. Parcourir les missions, valider les fragments et ouvrir la finale.
 
-Le service worker `abbadie-v9` pré-cache la coque, les scripts et styles du build, le château SVG et les visuels locaux dès son installation. Attendre la fin de l’installation avant de couper le réseau. Les anciens caches du jeu sont retirés à l’activation ; les caches d’autres applications sont conservés. Les navigations hors ligne reviennent vers la page principale.
+Le service worker `abbadie-v10` pré-cache la coque, les scripts et styles du build, le château SVG et les visuels locaux dès son installation. Attendre la fin de l’installation avant de couper le réseau. Les anciens caches du jeu sont retirés à l’activation ; les caches d’autres applications sont conservés. Les navigations hors ligne reviennent vers la page principale.
 
 ## Progression locale
 
@@ -77,4 +77,4 @@ Les six fragments `4`, `7`, `2`, `5`, `9`, `6` s’assemblent automatiquement en
 
 Le bouton « Animations » mémorise une préférence sur la tablette ; `prefers-reduced-motion` est également respecté. Dans ce mode, la finale avance sur action de l’équipe. Tous les éléments importants sont des contrôles HTML accessibles au clavier. Les mises en page visent 768×1024, 1024×768 et les petites largeurs.
 
-La validation automatique ne remplace pas une inspection visuelle : voir les étapes restantes dans [le rapport de vérification](docs/validation-finition.md).
+Les six missions et la finale ont été vérifiées dans Chrome en 768×1024, 1024×768 et 390×844, entièrement hors ligne après un premier chargement. Le script `scripts/check-browser.mjs` reproduit le parcours et les captures avec une installation de Playwright réservée aux tests. Voir les commandes et les limites sur appareils physiques dans [le rapport de vérification](docs/validation-finition.md).

@@ -22,4 +22,6 @@ La carte `public/og.png` est réservée au partage externe, sans rôle dans les 
 
 ## Évolution éventuelle du décor
 
+Validation du 19 septembre : réserver une place distincte aux légendes et aux poids binaires ; aucun décor ne doit intercepter les touchers. Sur tablette, garder les réserves proches des destinations et réduire la hauteur de la machine centrale. Sur mobile, placer l’entrée dans le laboratoire avant l’illustration. Les réussites reçoivent le focus ; le château final remplace la machine dans la scène.
+
 Aucun raster n’est nécessaire au jeu actuel. Si une illustration plus riche est souhaitée : produire un WebP 1200×1050, moins de 300 Ko, reprenant l’arche, le château nocturne imaginaire, l’océan et la fenêtre lumineuse. Laisser la partie basse centrale calme pour la machine HTML. Aucun logo, personnage supplémentaire, mot ni chiffre. Conserver le SVG comme repli léger et ajouter tout remplacement au pré-cache.

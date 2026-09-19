@@ -1,4 +1,4 @@
-const CACHE = 'abbadie-v9';
+const CACHE = 'abbadie-v10';
 const CORE = ['/', '/index.html', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png', '/assets/abbadia-night.svg', '/og.png'];
 
 self.addEventListener('install', (event) => {
@@ -22,7 +22,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    // All game resources are static and same-origin. Vite serves them with
+    // Vary: Origin, while module requests and pre-cache requests differ there.
+    caches.match(event.request, { cacheName: CACHE, ignoreVary: true }).then((cached) => cached || fetch(event.request).then((response) => {
       if (!response.ok) return response;
       return caches.open(CACHE).then((cache) => cache.put(event.request, response.clone())).then(() => response);
     }).catch(() => event.request.mode === 'navigate' ? caches.match('/index.html') : undefined)),

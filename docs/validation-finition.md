@@ -1,37 +1,52 @@
-# Vérification de la finition — 16 septembre 2026
+# Vérification de la finition — 19 septembre 2026
 
-## Référence
+## Résultat
 
-Dépôt propre au départ, branche `main`, commit `5bf6f56`.
-Suite de référence : 77 tests réussis dans 15 fichiers. Build TypeScript/Vite réussi.
+Vérification réelle avec Google Chrome 153 piloté par Playwright, sur le build de production local. Parcours complet aux dimensions **768×1024**, **1024×768** et **390×844**, y compris après coupure réseau et rechargement. Les captures ont été ouvertes et inspectées ; les tests jsdom ne sont plus la seule preuve de validation.
 
-## Validation automatique finale
+**98 tests réussis dans 15 fichiers**, build TypeScript/Vite réussi. Le code final reste **472596**. Aucun moteur de puzzle ni format de sauvegarde modifié, aucune dépendance d’exécution ajoutée.
 
-97 tests dans 15 fichiers : règles et interactions des six missions, glisser-déposer et alternative sélection/dépôt, sauvegardes, indices, remises à zéro, accueil et trois niveaux, états de la machine, six révélations et fragments `472596`, finale automatique, blocage avant six fragments, animation complète/passée/réduite, carnet, rejeu, confirmation globale et clavier.
+## Corrections issues du navigateur
 
-Le service worker est exécuté dans un environnement simulé : installation, ressources pré-cachées, rechargement des ressources sans réseau, repli de navigation et nettoyage des caches obsolètes. Les nouveaux fichiers sont vérifiés présents localement. Le test existant d’absence de ressources distantes est conservé.
+- Suppression du défilement parasite à l’accueil et des conteneurs qui gênaient le défilement du document.
+- Laboratoire entièrement visible dans les deux orientations tablette ; fragments et accès à la finale rapprochés.
+- Réserves et destinations côte à côte sur tablette. Grille Programme réduite et répartie sur deux ou trois colonnes selon la largeur. Destinations Mémoire et Informatique partout maintenues à l’écran pendant le défilement.
+- Disposition verticale sur mobile, bouton d’entrée placé avant le château. Les pages longues restent déroulantes.
+- Poids binaires séparés des étoiles ; légende du château dégagée ; bouton de retrait des instructions agrandi.
+- Flèches décoratives d’Informatique partout privées d’interception des événements : leur rotation bloquait les dépôts tactiles sur mobile.
+- Révélation d’un fragment amenée à l’écran avec focus sur le panneau de réussite.
+- Château final affiché à la place de la machine, évitant l’ajout d’une deuxième grande scène sous le bouton.
 
-Aucune dépendance ajoutée. Les moteurs, données de puzzles, classifieur et format de sauvegarde restent inchangés. Seul le libellé d’âge Expert est développé en « 12 ans et plus ».
+Exemples de hauteurs avant/après, sur l’état initial Scientifique : Programme portrait **1 837 → 1 110 px**, Informatique partout paysage **1 549 → 1 072 px**. L’accueil et le laboratoire vierge tiennent dans la hauteur du viewport tablette. Le défilement vertical des autres missions reste volontaire lorsque leur contenu le nécessite.
 
-## Limite de la session
+## Parcours et captures
 
-Le runtime Browser a été initialisé, mais ne dispose d’aucun navigateur connecté (`No browser is available`, liste vide). L’application répond sur le serveur local, mais **aucune capture du jeu ni inspection de mise en page dans un navigateur n’a pu être effectuée**. La carte de partage PNG a été inspectée comme image ; ce n’est pas une validation de l’interface.
+À chacune des trois dimensions : accueil, laboratoire vierge, six missions, six révélations, laboratoire partiel, entraînement et comparaison IA, finale, château illuminé, victoire et carnet. Le parcours utilise les véritables contrôles tactiles du navigateur, vérifie le focus des réussites, la reprise après rechargement et l’absence de débordement horizontal et d’erreur JavaScript.
 
-Les tests jsdom et du service worker ne prouvent pas le rendu réel, les tailles tactiles mesurées, le contraste de chaque détail, la fluidité sur tablette, ni l’installation PWA réelle.
+Glisser-déposer tactile Composants vérifié avec des événements tactiles Chrome aux deux orientations tablette ; dépôt souris également vérifié en paysage. Défilement à la molette et maintien des destinations à l’écran vérifiés. L’alternative toucher l’objet puis la cible permet de terminer toutes les missions, y compris sur mobile.
 
-## Parcours manuel à effectuer
+Le script reproductible est `scripts/check-browser.mjs`. Les captures locales de cette session sont dans `/tmp/abbadia-browser-shots/` ; elles ne sont pas livrées comme assets du jeu. Le script les régénère à chaque passage, sans animation transitoire pour faciliter leur inspection.
 
-À chaque dimension **768×1024** et **1024×768**, capturer et inspecter :
+## PWA réelle
 
-1. Accueil : château, titre, choix d’âge, bouton principal visible et navigation au clavier.
-2. Laboratoire sans progression : six modules accessibles, connexion au cœur, états écrits.
-3. Mission Composants : sélection, erreur, glisser-déposer tactile, placements verrouillés, aide et remise à zéro locale.
-4. Révélation du fragment 4 : chiffre, transmission, texte pédagogique et retour au laboratoire.
-5. Laboratoire partiellement complété : module allumé, emplacement 4, progression et reprise après rechargement.
-6. Chacune des cinq autres missions, particulièrement la grille Programme, les voisins IA et la comparaison des jeux d’apprentissage.
-7. Finale : code `472596` sans saisie, six activations, réveil et illumination ; version avec animation, animation passée et mouvement réduit.
-8. Victoire et carnet : les trois actions, rejeu réellement vierge, annulation puis confirmation de « Nouvelle équipe ».
+Un premier chargement attend l’activation du service worker ; le réseau est ensuite désactivé dans le contexte Chrome. Rechargement complet puis **six missions et finale entièrement hors ligne** dans les trois formats. Une vérification séparée confirme aussi la reprise d’une saisie binaire partielle après rechargement hors ligne.
 
-Reprendre les écrans 1–8 à **390×844**, puis contrôler le texte agrandi à 200 %. Vérifier l’absence de débordement horizontal, de recouvrement, de décor devant une valeur ou une pièce, de contrôle essentiel sous 44×44 px, ainsi que le focus visible.
+Le navigateur a révélé un échec que les mocks ne détectaient pas : `Vary: Origin` du serveur de prévisualisation faisait différer les requêtes de modules des requêtes de pré-cache. Le cache `abbadie-v10` retrouve désormais les ressources statiques de même origine indépendamment de cet en-tête. La recherche est limitée à la version courante du cache. Un test de régression couvre cette condition.
 
-Pour la PWA réelle : `npm run build`, puis `npm run preview`. Charger complètement en ligne, attendre l’activation de `abbadie-v9`, installer sur la tablette, couper le réseau, fermer et relancer l’application, recharger entièrement et terminer une mission. Vérifier le passage depuis une installation v8 en conservant la progression. Cette vérification reste à faire dans un vrai navigateur.
+Les tests vérifient aussi le manifeste, les assets locaux, le nettoyage des anciens caches du jeu et l’absence de ressources distantes. Le test navigateur n’a observé aucune requête vers un autre domaine.
+
+## Reproduire
+
+Installer Playwright uniquement pour les tests, éventuellement dans un dossier temporaire extérieur au dépôt. Lancer `npm run build`, puis `npm run preview -- --host 127.0.0.1`.
+
+```sh
+PLAYWRIGHT_MODULE=/tmp/abbadia-browser-check/node_modules/playwright/index.mjs \
+BROWSER_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \
+node scripts/check-browser.mjs
+```
+
+`GAME_URL` permet de changer l’adresse locale (par défaut `http://127.0.0.1:4173`) et `BROWSER_SHOTS` le dossier de captures. Le script nécessite un build de production avec service worker actif.
+
+## Limites restantes
+
+Validation sur Chrome macOS avec viewport et entrées tactiles émulés, pas sur une tablette physique. L’installation sur l’écran d’accueil, Safari/iPadOS, le confort au doigt et les performances sur l’appareil cible restent à vérifier. Le texte agrandi à 200 % et l’audit complet des contrastes n’ont pas été validés dans cette session. L’animation passée/réduite, le rejeu, les confirmations et le clavier sont couverts par les tests d’interface ; l’animation complète est également parcourue dans Chrome.

@@ -18,3 +18,151 @@ body{font-family:var(--font-body)}h1,h2,h3{font-family:var(--font-display)}p{lin
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .ai-guided .ai-guide{grid-template-columns:54px 1fr}.ai-guided-header .shared-mission-header .eyebrow{font-size:12px}.component-mission__topline{gap:12px;flex-wrap:wrap}.welcome-levels label:focus-within{outline:3px solid var(--aqua);outline-offset:3px}
 .component-card-content__copy small,.memory-card small,.chain-card small,.chain-zone>small,.drop-zone__action,.component-reserve__heading small,.component-machine__title small{font-size:14px;line-height:1.4}.chain-zone>b{font-size:17px}.chain-zone>small{min-height:42px}.chain-card strong{font-size:15px}.component-progress small{font-size:13px}.completion-panel .button{margin-top:4px}.mission-heading>div,.instruction-panel>div,.completion-panel>div{min-width:0}
+
+/* Verified tablet layouts: the document scrolls, decorative wrappers do not. */
+html, body { overflow-x: clip; }
+.app { display: flex; flex-direction: column; min-height: 100svh; overflow: clip; }
+main { flex: 1; min-height: 0; padding: 16px 24px; }
+.panel { min-height: 0; padding: 16px; }
+.topbar, .app--ai .topbar { min-height: 64px; padding: 7px 24px; }
+.brand { min-width: 48px; }
+footer { min-height: 36px; padding: 10px 16px; line-height: 1.4; }
+.screen-welcome main { display: grid; align-items: center; }
+.welcome { min-height: 0; }
+.welcome-levels { min-width: 0; }
+.welcome-machine { bottom: 72px; left: 36%; width: 28%; }
+.welcome-machine .astrolabe { width: 115px; }
+.scene-caption { margin-top: 36px; }
+
+.map-view { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 10px 16px; }
+.map-view > .section-heading, .map-view > .instruction-panel,
+.map-view > .machine-progress, .map-view > .central-machine { grid-column: 1 / -1; margin: 0; }
+.map-view .section-heading h1 { font-size: 34px; margin: 0; }
+.map-view .section-heading .eyebrow { margin-bottom: 6px; }
+.map-view .instruction-panel { padding: 8px 12px; }
+.map-view .instruction-panel .guide-character { width: 42px; height: 46px; }
+.map-view .fragment-collection { margin: 0; gap: 8px; align-self: center; }
+.map-view .fragment-collection li { width: 44px; min-height: 60px; }
+.map-view .final-gate { min-height: 66px; padding: 10px 14px; grid-template-columns: 20px 1fr auto; gap: 10px; }
+.map-view .final-gate b { font-size: 15px; }
+.map-view .final-gate small { font-size: 12px; line-height: 1.4; }
+.central-machine { grid-template-rows: repeat(3, minmax(82px, auto)); margin: 10px 0; padding: 18px; gap: 10px 22px; }
+.machine-module { padding: 15px 10px 10px; }
+.machine-module::after { width: 23px; }
+
+.screen-mission main, .app--ai main { padding: 12px 18px; }
+.component-mission__topline { min-height: 48px; margin-bottom: 8px; }
+.component-mission__topline .back-link, .component-mission__topline .button { margin: 0; }
+.shared-mission-header { margin: 8px 0 12px; }
+.shared-mission-header h1 { font-size: clamp(26px, 3vw, 34px); }
+.shared-mission-header .eyebrow { margin-bottom: 4px; }
+.component-progress { min-width: 130px; padding: 8px 10px; }
+.component-progress small { margin-bottom: 0; }
+.instruction-panel { margin: 10px 0 12px; padding: 8px 12px; }
+.instruction-panel .guide-character { width: 42px; height: 46px; }
+.component-hints { padding-top: 10px; }
+.component-feedback { margin: 10px 0; }
+.component-game { min-height: 0; }
+.component-machine { min-height: 0; }
+.component-reserve { margin: 0; padding: 12px; }
+.component-reserve__items { margin-top: 10px; }
+.component-targets { margin-top: 12px; }
+.component-machine__stars { display: none; }
+.drop-zone--ready:not(.drop-zone--occupied)::after,
+.drop-zone--compatible:not(.drop-zone--occupied)::before { position: static; font-size: 11px; }
+.reserve-empty { margin: 24px 0; }
+.program-remove { width: 48px; height: 48px; }
+.program-slot .manipulable { padding-right: 54px; }
+.program-workbench > *, .memory-room > *, .castle-lab > * { min-width: 0; }
+.observatory-grid { align-self: start; }
+.memory-destinations { align-content: start; }
+.memory-destinations > .drop-zone { min-height: 240px; }
+.memory-zone__cards { grid-template-columns: 1fr; }
+.memory-zone__cards i span { font-size: 12px; }
+.chain-machine { align-self: start; }
+.castle-sky { height: 70px; }
+.chain-zones { grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr) 18px minmax(0, 1fr); }
+.chain-zone { padding: 8px; min-height: 190px; }
+.chain-zone > b { font-size: 16px; }
+.chain-zone > small { font-size: 13px; }
+.chain-zone > i { margin-top: 20px; }
+.chain-flow { pointer-events: none; }
+.binary-weight { position: static; }
+.binary-dial > b { font-size: 44px; }
+
+.finale { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+.finale > .back-link, .finale > .eyebrow, .finale > h1,
+.finale > .instruction-panel, .finale > .central-machine,
+.finale > .finale-castle, .finale > .finale-actions { grid-column: 1 / -1; margin: 0; }
+.finale > .fragment-collection, .finale > .assembled-code { margin: 0; align-self: center; }
+.finale .fragment-collection li { min-height: 60px; }
+.finale > h1 { font-size: 34px; }
+.finale > .eyebrow { margin-top: 4px; }
+.finale > .finale-castle { height: 302px; width: 100%; max-width: none; object-fit: contain; }
+.completion-panel { scroll-margin: 16px; }
+.completion-panel:focus { outline: none; }
+
+@media (min-width: 740px) {
+  .component-game { display: grid; grid-template-columns: minmax(220px, .85fr) minmax(0, 1.4fr); gap: 12px; }
+  .component-reserve__items { grid-template-columns: 1fr; }
+  .component-game .drop-zone { min-height: 145px; }
+  .program-workbench { grid-template-columns: minmax(0, 1fr) minmax(270px, 1fr); gap: 12px; align-items: start; }
+  .program-workbench .observatory-grid { grid-column: 1; grid-row: 1; width: min(100%, 350px); margin: 0 auto; }
+  .program-console { grid-column: 2; grid-row: 1 / 3; }
+  .program-reserve { grid-column: 1; grid-row: 2; }
+  .program-reserve > div { grid-template-columns: 1fr 1fr; }
+  .program-block { gap: 6px; font-size: 14px; }
+  .program-block > b { width: 28px; height: 32px; flex: none; }
+  .memory-room { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .memory-reserve > div { grid-template-columns: 1fr 1fr; }
+  .memory-card { grid-template-columns: 1fr; gap: 6px; }
+  .memory-card > b { display: none; }
+  .memory-destinations { gap: 10px; position: sticky; top: 12px; }
+  .memory-zone { padding: 10px; }
+  .memory-zone > b { font-size: 17px; }
+  .memory-zone__icon { width: 44px; height: 44px; font-size: 24px; }
+  .castle-lab { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); align-items: start; }
+  .chain-reserve > div { grid-template-columns: 1fr 1fr; }
+  .chain-card { grid-template-columns: 1fr; gap: 5px; }
+  .chain-card > b { display: none; }
+  .chain-machine { position: sticky; top: 12px; }
+  .binary-dial { min-height: 180px; }
+  .binary-console { padding: 14px; }
+}
+@media (min-width: 1000px) {
+  .program-workbench { grid-template-columns: minmax(0, 1fr) minmax(260px, .9fr) minmax(220px, .8fr); }
+  .program-workbench .observatory-grid { grid-column: 1; grid-row: 1; }
+  .program-console { grid-column: 2; grid-row: 1; }
+  .program-reserve { grid-column: 3; grid-row: 1; }
+  .program-reserve > div { grid-template-columns: 1fr; }
+}
+@media (max-width: 739px) {
+  main, .screen-mission main, .app--ai main { padding: 12px; }
+  .panel { padding: 12px; }
+  .welcome { grid-template-columns: 1fr; }
+  .observatory-scene { grid-row: auto; max-width: 320px; margin: auto; }
+  .welcome-machine { bottom: 72px; }
+  .topbar, .app--ai .topbar { padding: 6px 12px; gap: 6px; }
+  .topbar__tools { width: auto; margin-left: auto; gap: 6px; }
+  .topbar__tools .button { font-size: 12px; padding: 8px; }
+  .topbar__status { font-size: 12px; }
+  .map-view, .finale { grid-template-columns: minmax(0, 1fr); }
+  .map-view > *, .finale > * { grid-column: 1 !important; }
+  .central-machine { grid-template-rows: auto repeat(3, minmax(90px, auto)); }
+  .component-machine { min-height: 0; }
+  .component-hints { flex-wrap: wrap; }
+  .component-hints ol { flex-basis: 100%; }
+  .shared-mission-header { display: flex; flex-wrap: wrap; }
+  .shared-mission-header > p { margin: 0; padding: 8px 10px; }
+  .component-progress { margin: 0; }
+  .program-workbench { display: flex; flex-direction: column; }
+  .program-workbench > * { width: 100%; }
+  .program-workbench .observatory-grid { max-width: 300px; }
+  .program-reserve { order: 1; }
+  .program-console { order: 2; }
+  .chain-zones { grid-template-columns: 1fr; }
+  .chain-zone { min-height: 170px; }
+  .chain-zone > i { margin-top: 5px; }
+  .memory-destinations > .drop-zone { min-height: 220px; }
+  .finale-actions { position: sticky; bottom: 0; padding: 10px 0; background: #102b3e; }
+}

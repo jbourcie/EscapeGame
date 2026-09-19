@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { missions, type Mission } from '../data/missions';
 import type { Progress } from '../game/progress';
 
@@ -54,5 +54,10 @@ export function FragmentReveal({ mission }: { mission: Mission }) {
   return <div className="fragment-transfer" aria-label={`Fragment ${mission.answer} transmis à la machine centrale`}><span className="fragment-plaque">{mission.answer}</span><span className="fragment-transfer__beam" aria-hidden="true">········ →</span><span className="fragment-socket"><b>{mission.answer}</b><small>✓ Enregistré</small></span></div>;
 }
 export function CompletionPanel({ mission, title, children, onBack }: { mission: Mission; title: string; children?: ReactNode; onBack: () => void }) {
-  return <section className="completion-panel" aria-live="polite"><GuideCharacter mood="success"/><div><p className="eyebrow">Fragment {mission.order} enregistré automatiquement</p><h2>{title}</h2><FragmentReveal mission={mission}/><div className="completion-learning">{children ?? <p>{mission.learning}</p>}</div><button className="button button--primary" onClick={onBack}>Retourner au laboratoire →</button></div></section>;
+  const panel = useRef<HTMLElement>(null);
+  useEffect(() => {
+    panel.current?.focus({ preventScroll: true });
+    panel.current?.scrollIntoView?.({ block: 'nearest' });
+  }, []);
+  return <section ref={panel} tabIndex={-1} className="completion-panel" aria-live="polite"><GuideCharacter mood="success"/><div><p className="eyebrow">Fragment {mission.order} enregistré automatiquement</p><h2>{title}</h2><FragmentReveal mission={mission}/><div className="completion-learning">{children ?? <p>{mission.learning}</p>}</div><button className="button button--primary" onClick={onBack}>Retourner au laboratoire →</button></div></section>;
 }

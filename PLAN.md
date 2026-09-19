@@ -148,5 +148,8 @@ La logique de jeu est pensée autour d’événements `select`, `place` et `rese
 - La finale se prépare au retour de la dernière mission, sans interrompre la lecture de sa réussite. Le code est dérivé des fragments de la sauvegarde dans l’ordre des missions, puis vérifié contre `finalCode`.
 - Animation finale de moins de cinq secondes, pouvant être passée ; en mouvement réduit, l’équipe avance par boutons sans animation ni attente. Une préférence locale permet aussi de neutraliser les animations CSS.
 - Rejeu : partie transitoire vierge pour la mission choisie, avec le niveau de l’équipe ; les fragments persistés ne sont jamais effacés. Retour à l’accueil et nouvelle équipe clairement séparés.
-- Cache `abbadie-v9` : château et carte de partage ajoutés, scripts/styles toujours issus du build. Nettoyage limité aux caches `abbadie-*` obsolètes.
+- Cache `abbadie-v10` : château et carte de partage ajoutés, scripts/styles toujours issus du build. Nettoyage limité aux caches `abbadie-*` obsolètes.
 - Vérifications automatisées et limites visuelles consignées dans `docs/validation-finition.md`.
+- Validation Chrome du 19 septembre : six missions et finale hors ligne aux deux formats tablette et sur mobile ; script reproductible `scripts/check-browser.mjs`.
+- Réserves et plateaux côte à côte sur tablette, défilement du document et destinations persistantes à l’écran ; focus et défilement vers chaque révélation de fragment. Sur mobile, les flèches décoratives ne capturent aucun toucher.
+- Les assets statiques de même origine sont retrouvés dans le cache courant malgré `Vary: Origin`, pour permettre le premier rechargement hors ligne depuis le serveur de prévisualisation.
