@@ -25,6 +25,8 @@ try {
   for (let i=3;i<6;i++) { await page.clock.runFor(1000); await page.locator('.awakening-socket.is-installed').nth(i).waitFor(); } await capture('ready');
   const modules=await page.locator('.central-machine').boundingBox(), sockets=await page.locator('.awakening-sockets').boundingBox();
   assert(modules.y+modules.height<=sockets.y,'modules and sockets overlap');
+  const stage=await page.locator('.awakening-stage').boundingBox();
+  assert(sockets.y+sockets.height<=stage.y+stage.height,'fragment sockets clipped');
   const control=page.getByRole('button',{name:/Maintiens pour activer/}); const box=await control.boundingBox();
   assert(box.height>=64); await page.mouse.move(box.x+box.width/2,box.y+box.height/2); await page.mouse.down();
   await page.clock.runFor(1000); await capture('charging'); await page.clock.runFor(1000); await page.mouse.up(); await capture('awakening');

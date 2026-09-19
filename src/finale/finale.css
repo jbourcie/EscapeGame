@@ -187,3 +187,4 @@
 .awakening--fragments .module-data.is-lit::after { animation: energy-flow 1s linear infinite; background: linear-gradient(90deg,#447b7e,var(--gold),var(--aqua),#447b7e); background-size: 200% 100%; }
 .awakening--fragments .module-everywhere.is-lit .module-icon { animation: instrument-link 1s ease both; }
 .awakening--fragments .module-ai.is-lit .module-icon { animation: lens-compare 1s ease both; }
+.awakening .machine-module .module-icon { height: 30px; }
